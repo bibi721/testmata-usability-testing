@@ -205,24 +205,6 @@ const LoginPage = () => {
           </CardContent>
         </Card>
 
-        {/* Demo Credentials */}
-        <Card className="border-blue-200 bg-blue-50">
-          <CardContent className="pt-6">
-            <div className="text-center">
-              <h3 className="text-sm font-medium text-blue-900 mb-2">
-                Demo Credentials
-              </h3>
-              <p className="text-xs text-blue-700 mb-3">
-                Use these credentials to explore the platform:
-              </p>
-              <div className="space-y-1 text-xs text-blue-800 font-mono">
-                <div>Email: demo@testmata.com</div>
-                <div>Password: demo123</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
         {/* Footer */}
         <div className="text-center text-xs text-slate-500">
           <p>
