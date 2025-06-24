@@ -43,7 +43,7 @@ const PricingPage = () => {
         "No advanced analytics",
         "Limited export options"
       ],
-      cta: "Start Free Trial",
+      cta: "Get Started",
       popular: false
     },
     {
@@ -65,7 +65,7 @@ const PricingPage = () => {
         "Advanced filtering"
       ],
       limitations: [],
-      cta: "Start Free Trial",
+      cta: "Get Started",
       popular: true
     },
     {
@@ -97,10 +97,6 @@ const PricingPage = () => {
     {
       question: "How does the Ethiopian user panel work?",
       answer: "Our panel includes 500+ verified Ethiopian users from different regions, age groups, and backgrounds. We recruit participants based on your target demographics and provide feedback in both Amharic and English."
-    },
-    {
-      question: "What's included in the free trial?",
-      answer: "The 14-day free trial includes full access to the Professional plan features, including 5 tests with Ethiopian users, advanced analytics, and priority support."
     },
     {
       question: "Do you support testing in Amharic?",
@@ -158,7 +154,7 @@ const PricingPage = () => {
               Affordable Testing for <span className="text-blue-600">Ethiopian Businesses</span>
             </h1>
             <p className="text-xl text-slate-600 mb-8 max-w-2xl mx-auto">
-              Pricing designed for the Ethiopian market. Start with a free trial and scale as you grow.
+              Pricing designed for the Ethiopian market. Start testing with real Ethiopian users today.
             </p>
 
             {/* Billing Toggle */}
@@ -345,7 +341,7 @@ const PricingPage = () => {
                 className="bg-white text-blue-600 hover:bg-slate-100 px-8 py-3 text-lg"
                 onClick={() => router.push('/auth/register')}
               >
-                Start Free Trial
+                Get Started
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
               <Button 

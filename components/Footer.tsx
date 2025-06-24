@@ -140,12 +140,9 @@ const Footer = () => {
 
         {/* Bottom Bar */}
         <div className="border-t border-slate-700 py-6">
-          <div className="flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
+          <div className="flex flex-col sm:flex-row justify-center items-center">
             <p className="text-slate-400 text-sm">
               © 2025 Masada. All rights reserved.
-            </p>
-            <p className="text-slate-400 text-sm">
-              Made in Ethiopia 🇪🇹
             </p>
           </div>
         </div>
