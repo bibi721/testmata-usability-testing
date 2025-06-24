@@ -26,9 +26,13 @@ interface AuthContextType {
   register: (email: string, password: string, name: string, userType?: 'customer' | 'tester') => Promise<void>;
   logout: () => void;
   updateUser: (userData: Partial<User>) => void;
+  checkEmailExists: (email: string) => Promise<{ exists: boolean; userType?: 'customer' | 'tester' }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+// Mock database to track registered emails
+const mockUserDatabase: { [email: string]: { userType: 'customer' | 'tester'; userData: User } } = {};
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -38,36 +42,48 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Simulate checking for existing session
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
-      setUser(JSON.parse(savedUser));
+      const userData = JSON.parse(savedUser);
+      setUser(userData);
+      // Also add to mock database if not already there
+      if (!mockUserDatabase[userData.email]) {
+        mockUserDatabase[userData.email] = {
+          userType: userData.userType,
+          userData: userData
+        };
+      }
     }
     setIsLoading(false);
   }, []);
+
+  const checkEmailExists = async (email: string): Promise<{ exists: boolean; userType?: 'customer' | 'tester' }> => {
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    const existingUser = mockUserDatabase[email.toLowerCase()];
+    if (existingUser) {
+      return {
+        exists: true,
+        userType: existingUser.userType
+      };
+    }
+    
+    return { exists: false };
+  };
 
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1500));
     
-    // Determine user type based on email domain or other logic
-    // For demo purposes, we'll use a simple check
-    const userType: 'customer' | 'tester' = email.includes('tester') || email.includes('test') ? 'tester' : 'customer';
+    const normalizedEmail = email.toLowerCase();
+    const existingUser = mockUserDatabase[normalizedEmail];
     
-    const mockUser: User = {
-      id: '1',
-      email,
-      name: email.split('@')[0],
-      userType,
-      ...(userType === 'customer' ? {
-        plan: 'free' as const,
-        company: 'Demo Company',
-        testsCreated: 0
-      } : {
-        rating: 4.8,
-        completedTests: 12,
-        earnings: 340,
-        level: 'Rising Tester'
-      })
-    };
+    if (!existingUser) {
+      setIsLoading(false);
+      throw new Error('User not found');
+    }
+    
+    const mockUser = existingUser.userData;
     
     setUser(mockUser);
     localStorage.setItem('user', JSON.stringify(mockUser));
@@ -76,12 +92,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const register = async (email: string, password: string, name: string, userType: 'customer' | 'tester' = 'customer') => {
     setIsLoading(true);
+    
+    const normalizedEmail = email.toLowerCase();
+    
+    // Check if email already exists
+    const emailCheck = await checkEmailExists(normalizedEmail);
+    if (emailCheck.exists) {
+      setIsLoading(false);
+      throw new Error(`This email is already registered as a ${emailCheck.userType} account. Please use a different email or sign in to your existing account.`);
+    }
+    
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    await new Promise(resolve => setTimeout(resolve, 1000));
     
     const mockUser: User = {
-      id: '1',
-      email,
+      id: Date.now().toString(),
+      email: normalizedEmail,
       name,
       userType,
       ...(userType === 'customer' ? {
@@ -94,6 +120,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         earnings: 0,
         level: 'New Tester'
       })
+    };
+    
+    // Add to mock database
+    mockUserDatabase[normalizedEmail] = {
+      userType,
+      userData: mockUser
     };
     
     setUser(mockUser);
@@ -111,6 +143,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const updatedUser = { ...user, ...userData };
       setUser(updatedUser);
       localStorage.setItem('user', JSON.stringify(updatedUser));
+      
+      // Update mock database
+      if (mockUserDatabase[user.email]) {
+        mockUserDatabase[user.email].userData = updatedUser;
+      }
     }
   };
 
@@ -121,7 +158,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       login,
       register,
       logout,
-      updateUser
+      updateUser,
+      checkEmailExists
     }}>
       {children}
     </AuthContext.Provider>

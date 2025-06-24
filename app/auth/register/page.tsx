@@ -11,7 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
 import { Progress } from '@/components/ui/progress';
-import { Target, Eye, EyeOff, Loader2, Mail, Github, Check, X } from 'lucide-react';
+import { Target, Eye, EyeOff, Loader2, Mail, Github, Check, X, AlertTriangle } from 'lucide-react';
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -23,8 +23,9 @@ const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
+  const [emailCheckStatus, setEmailCheckStatus] = useState<'idle' | 'checking' | 'available' | 'taken'>('idle');
   const [passwordStrength, setPasswordStrength] = useState(0);
-  const { register, isLoading } = useAuth();
+  const { register, isLoading, checkEmailExists } = useAuth();
   const router = useRouter();
 
   const passwordRequirements = [
@@ -45,6 +46,29 @@ const RegisterPage = () => {
 
     if (name === 'password') {
       setPasswordStrength(calculatePasswordStrength(value));
+    }
+
+    if (name === 'email') {
+      setEmailCheckStatus('idle');
+      setError('');
+    }
+  };
+
+  const handleEmailBlur = async () => {
+    if (formData.email && formData.email.includes('@')) {
+      setEmailCheckStatus('checking');
+      try {
+        const result = await checkEmailExists(formData.email);
+        if (result.exists) {
+          setEmailCheckStatus('taken');
+          setError(`This email is already registered as a ${result.userType} account. Please use a different email or sign in to your existing account.`);
+        } else {
+          setEmailCheckStatus('available');
+          setError('');
+        }
+      } catch (err) {
+        setEmailCheckStatus('idle');
+      }
     }
   };
 
@@ -68,11 +92,16 @@ const RegisterPage = () => {
       return;
     }
 
+    if (emailCheckStatus === 'taken') {
+      setError('This email is already registered. Please use a different email.');
+      return;
+    }
+
     try {
       await register(formData.email, formData.password, formData.name, 'customer');
       router.push('/dashboard');
-    } catch (err) {
-      setError('Registration failed. Please try again.');
+    } catch (err: any) {
+      setError(err.message || 'Registration failed. Please try again.');
     }
   };
 
@@ -141,6 +170,7 @@ const RegisterPage = () => {
             {/* Error Alert */}
             {error && (
               <Alert className="border-red-200 bg-red-50">
+                <AlertTriangle className="h-4 w-4" />
                 <AlertDescription className="text-red-700">
                   {error}
                 </AlertDescription>
@@ -169,16 +199,40 @@ const RegisterPage = () => {
                 <Label htmlFor="email" className="text-slate-700 font-medium">
                   Email Address
                 </Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="Enter your email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className="h-11 border-slate-300 focus:border-blue-500 focus:ring-blue-500"
-                  required
-                />
+                <div className="relative">
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="Enter your email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    onBlur={handleEmailBlur}
+                    className={`h-11 pr-10 focus:border-blue-500 focus:ring-blue-500 ${
+                      emailCheckStatus === 'taken' ? 'border-red-300' :
+                      emailCheckStatus === 'available' ? 'border-green-300' :
+                      'border-slate-300'
+                    }`}
+                    required
+                  />
+                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                    {emailCheckStatus === 'checking' && (
+                      <Loader2 className="h-4 w-4 text-slate-400 animate-spin" />
+                    )}
+                    {emailCheckStatus === 'available' && (
+                      <Check className="h-4 w-4 text-green-600" />
+                    )}
+                    {emailCheckStatus === 'taken' && (
+                      <X className="h-4 w-4 text-red-600" />
+                    )}
+                  </div>
+                </div>
+                {emailCheckStatus === 'available' && (
+                  <p className="text-xs text-green-600">✓ Email is available</p>
+                )}
+                {emailCheckStatus === 'taken' && (
+                  <p className="text-xs text-red-600">✗ Email is already registered</p>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -298,7 +352,7 @@ const RegisterPage = () => {
               <Button
                 type="submit"
                 className="w-full h-11 bg-blue-600 hover:bg-blue-700 text-white font-medium"
-                disabled={isLoading}
+                disabled={isLoading || emailCheckStatus === 'taken' || emailCheckStatus === 'checking'}
               >
                 {isLoading ? (
                   <>

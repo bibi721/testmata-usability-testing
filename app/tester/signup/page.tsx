@@ -13,7 +13,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Target, CheckCircle, DollarSign, Clock, Users, Star } from 'lucide-react';
+import { Target, CheckCircle, DollarSign, Clock, Users, Star, AlertTriangle, Loader2, Check, X } from 'lucide-react';
 
 const TesterSignupPage = () => {
   const [formData, setFormData] = useState({
@@ -34,7 +34,8 @@ const TesterSignupPage = () => {
   });
   const [error, setError] = useState('');
   const [currentStep, setCurrentStep] = useState(1);
-  const { register } = useAuth();
+  const [emailCheckStatus, setEmailCheckStatus] = useState<'idle' | 'checking' | 'available' | 'taken'>('idle');
+  const { register, checkEmailExists } = useAuth();
   const router = useRouter();
 
   const benefits = [
@@ -70,6 +71,11 @@ const TesterSignupPage = () => {
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    
+    if (field === 'email') {
+      setEmailCheckStatus('idle');
+      setError('');
+    }
   };
 
   const handleArrayChange = (field: string, value: string, checked: boolean) => {
@@ -79,6 +85,24 @@ const TesterSignupPage = () => {
         ? [...prev[field], value]
         : prev[field].filter(item => item !== value)
     }));
+  };
+
+  const handleEmailBlur = async () => {
+    if (formData.email && formData.email.includes('@')) {
+      setEmailCheckStatus('checking');
+      try {
+        const result = await checkEmailExists(formData.email);
+        if (result.exists) {
+          setEmailCheckStatus('taken');
+          setError(`This email is already registered as a ${result.userType} account. Please use a different email or sign in to your existing account.`);
+        } else {
+          setEmailCheckStatus('available');
+          setError('');
+        }
+      } catch (err) {
+        setEmailCheckStatus('idle');
+      }
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -94,12 +118,17 @@ const TesterSignupPage = () => {
       return;
     }
 
+    if (emailCheckStatus === 'taken') {
+      setError('This email is already registered. Please use a different email.');
+      return;
+    }
+
     try {
       const fullName = `${formData.firstName} ${formData.lastName}`;
       await register(formData.email, 'defaultPassword123', fullName, 'tester');
       router.push('/tester');
-    } catch (err) {
-      setError('Registration failed. Please try again.');
+    } catch (err: any) {
+      setError(err.message || 'Registration failed. Please try again.');
     }
   };
 
@@ -211,6 +240,7 @@ const TesterSignupPage = () => {
               <CardContent>
                 {error && (
                   <Alert className="border-red-200 bg-red-50 mb-6">
+                    <AlertTriangle className="h-4 w-4" />
                     <AlertDescription className="text-red-700">
                       {error}
                     </AlertDescription>
@@ -248,14 +278,38 @@ const TesterSignupPage = () => {
 
                       <div>
                         <Label htmlFor="email">Email Address *</Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) => handleInputChange('email', e.target.value)}
-                          className="mt-1"
-                          required
-                        />
+                        <div className="relative">
+                          <Input
+                            id="email"
+                            type="email"
+                            value={formData.email}
+                            onChange={(e) => handleInputChange('email', e.target.value)}
+                            onBlur={handleEmailBlur}
+                            className={`mt-1 pr-10 ${
+                              emailCheckStatus === 'taken' ? 'border-red-300' :
+                              emailCheckStatus === 'available' ? 'border-green-300' :
+                              'border-slate-300'
+                            }`}
+                            required
+                          />
+                          <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                            {emailCheckStatus === 'checking' && (
+                              <Loader2 className="h-4 w-4 text-slate-400 animate-spin" />
+                            )}
+                            {emailCheckStatus === 'available' && (
+                              <Check className="h-4 w-4 text-green-600" />
+                            )}
+                            {emailCheckStatus === 'taken' && (
+                              <X className="h-4 w-4 text-red-600" />
+                            )}
+                          </div>
+                        </div>
+                        {emailCheckStatus === 'available' && (
+                          <p className="text-xs text-green-600 mt-1">✓ Email is available</p>
+                        )}
+                        {emailCheckStatus === 'taken' && (
+                          <p className="text-xs text-red-600 mt-1">✗ Email is already registered</p>
+                        )}
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -472,11 +526,19 @@ const TesterSignupPage = () => {
                     </Button>
                     
                     {currentStep < 3 ? (
-                      <Button type="button" onClick={nextStep}>
+                      <Button 
+                        type="button" 
+                        onClick={nextStep}
+                        disabled={emailCheckStatus === 'taken' || emailCheckStatus === 'checking'}
+                      >
                         Next Step
                       </Button>
                     ) : (
-                      <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white">
+                      <Button 
+                        type="submit" 
+                        className="bg-blue-600 hover:bg-blue-700 text-white"
+                        disabled={emailCheckStatus === 'taken' || emailCheckStatus === 'checking'}
+                      >
                         Submit Application
                       </Button>
                     )}

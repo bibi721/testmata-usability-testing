@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
-import { Target, Eye, EyeOff, Loader2, Mail, Github } from 'lucide-react';
+import { Target, Eye, EyeOff, Loader2, Mail, Github, AlertTriangle } from 'lucide-react';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -31,9 +31,13 @@ const LoginPage = () => {
 
     try {
       await login(email, password);
-      router.push('/dashboard');
-    } catch (err) {
-      setError('Invalid email or password');
+      // Router will be handled by the auth context based on user type
+    } catch (err: any) {
+      if (err.message === 'User not found') {
+        setError('No account found with this email. Please check your email or create a new account.');
+      } else {
+        setError('Invalid email or password');
+      }
     }
   };
 
@@ -55,7 +59,7 @@ const LoginPage = () => {
             Welcome Back
           </h1>
           <p className="text-slate-600">
-            Sign in to your account to continue testing
+            Sign in to your account to continue
           </p>
         </div>
 
@@ -102,6 +106,7 @@ const LoginPage = () => {
             {/* Error Alert */}
             {error && (
               <Alert className="border-red-200 bg-red-50">
+                <AlertTriangle className="h-4 w-4" />
                 <AlertDescription className="text-red-700">
                   {error}
                 </AlertDescription>
@@ -190,17 +195,25 @@ const LoginPage = () => {
               </Button>
             </form>
 
-            {/* Sign Up Link */}
-            <div className="text-center pt-4 border-t border-slate-200">
+            {/* Sign Up Links */}
+            <div className="text-center pt-4 border-t border-slate-200 space-y-2">
               <p className="text-sm text-slate-600">
-                Don't have an account?{' '}
+                Don't have an account?
+              </p>
+              <div className="flex flex-col space-y-2">
                 <Link
                   href="/auth/register"
-                  className="text-blue-600 hover:text-blue-500 font-medium"
+                  className="text-blue-600 hover:text-blue-500 font-medium text-sm"
                 >
-                  Sign up for free
+                  Sign up as a Customer
                 </Link>
-              </p>
+                <Link
+                  href="/tester/signup"
+                  className="text-blue-600 hover:text-blue-500 font-medium text-sm"
+                >
+                  Become a Tester
+                </Link>
+              </div>
             </div>
           </CardContent>
         </Card>
