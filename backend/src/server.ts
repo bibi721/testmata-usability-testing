@@ -11,10 +11,9 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { config } from '@/config/environment';
 import { logger } from '@/utils/logger';
-import { errorHandler } from '@/middleware/errorHandler';
+import { errorHandler, notFoundHandler } from '@/middleware/errorHandler';
 import { requestLogger } from '@/middleware/requestLogger';
 import { authMiddleware } from '@/middleware/auth';
-import { validateRequest } from '@/middleware/validation';
 
 // Route imports
 import authRoutes from '@/routes/auth';
@@ -142,21 +141,7 @@ class MasadaServer {
     this.app.use(`${apiPrefix}/analytics`, authMiddleware, analyticsRoutes);
 
     // 404 handler for undefined routes
-    this.app.use('*', (req, res) => {
-      res.status(404).json({
-        error: 'Route not found',
-        message: `The requested endpoint ${req.originalUrl} does not exist`,
-        availableEndpoints: [
-          `${apiPrefix}/auth`,
-          `${apiPrefix}/users`,
-          `${apiPrefix}/tests`,
-          `${apiPrefix}/sessions`,
-          `${apiPrefix}/payments`,
-          `${apiPrefix}/analytics`,
-          `${apiPrefix}/uploads`,
-        ],
-      });
-    });
+    this.app.use('*', notFoundHandler);
   }
 
   /**
