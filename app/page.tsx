@@ -1,7 +1,6 @@
 import Hero from '@/components/Hero';
 import Features from '@/components/Features';
 import SocialProof from '@/components/SocialProof';
-import Benefits from '@/components/Benefits';
 
 export default function Home() {
   return (
@@ -9,7 +8,6 @@ export default function Home() {
       <Hero />
       <Features />
       <SocialProof />
-      <Benefits />
     </>
   );
 }

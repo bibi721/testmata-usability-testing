@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Play, ArrowRight, Users, Target, BarChart3 } from 'lucide-react';
+import { Play, ArrowRight, Users, Target, BarChart3, CheckCircle } from 'lucide-react';
 
 const Hero = () => {
   return (
@@ -35,8 +35,24 @@ const Hero = () => {
             {/* Subheading */}
             <p className="text-xl text-slate-600 mb-8 max-w-3xl mx-auto leading-relaxed">
               Get actionable insights from Ethiopian users to improve your web applications and websites. 
-              Masada helps you understand local user behavior and build products that resonate with your target market.
+              Understand local user behavior and build products that resonate with your target market.
             </p>
+
+            {/* Value Propositions */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 max-w-3xl mx-auto">
+              <div className="flex items-center justify-center space-x-2 text-slate-700">
+                <CheckCircle className="h-5 w-5 text-green-500" />
+                <span className="text-sm font-medium">500+ Ethiopian Testers</span>
+              </div>
+              <div className="flex items-center justify-center space-x-2 text-slate-700">
+                <CheckCircle className="h-5 w-5 text-green-500" />
+                <span className="text-sm font-medium">24-hour Results</span>
+              </div>
+              <div className="flex items-center justify-center space-x-2 text-slate-700">
+                <CheckCircle className="h-5 w-5 text-green-500" />
+                <span className="text-sm font-medium">Affordable Pricing</span>
+              </div>
+            </div>
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
@@ -46,26 +62,31 @@ const Hero = () => {
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
-              <Link href="/tester/signup">
+              <Link href="/product">
                 <Button 
                   size="lg" 
                   variant="outline" 
                   className="px-8 py-3 text-lg border-slate-300 hover:bg-slate-50 group"
                 >
                   <Play className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
-                  Become a Tester
+                  See How It Works
                 </Button>
               </Link>
             </div>
 
-            {/* Trust Indicators */}
-            <div className="text-sm text-slate-500 mb-16">
-              ✓ No setup fees  •  ✓ Ethiopian user panel  •  ✓ Results in 24 hours
+            {/* Secondary CTA for Testers */}
+            <div className="text-center">
+              <p className="text-slate-600 mb-4">Want to earn money as a tester?</p>
+              <Link href="/tester/signup">
+                <Button variant="ghost" className="text-blue-600 hover:text-blue-700 hover:bg-blue-50">
+                  Become a Tester →
+                </Button>
+              </Link>
             </div>
           </div>
 
-          {/* Stats */}
-          <div className="max-w-4xl mx-auto">
+          {/* Stats - Simplified */}
+          <div className="max-w-4xl mx-auto mt-16">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
               <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-sm hover:shadow-md transition-shadow">
                 <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-lg mx-auto mb-4">

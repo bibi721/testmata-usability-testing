@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Star, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
+import { Star, ChevronLeft, ChevronRight, Quote, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const SocialProof = () => {
@@ -10,12 +10,12 @@ const SocialProof = () => {
 
   // Ethiopian tech companies and testimonials
   const companies = [
-    { name: "Ride", logo: "🚗", link: "#" },
-    { name: "Deliver Addis", logo: "🛵", link: "#" },
-    { name: "Gebeya", logo: "💼", link: "#" },
-    { name: "iCog Labs", logo: "🤖", link: "#" },
-    { name: "Kazana", logo: "💳", link: "#" },
-    { name: "Sheba Platform", logo: "🏪", link: "#" }
+    { name: "Ride", logo: "🚗" },
+    { name: "Deliver Addis", logo: "🛵" },
+    { name: "Gebeya", logo: "💼" },
+    { name: "iCog Labs", logo: "🤖" },
+    { name: "Kazana", logo: "💳" },
+    { name: "Sheba Platform", logo: "🏪" }
   ];
 
   const testimonials = [
@@ -25,7 +25,8 @@ const SocialProof = () => {
       company: "Ethiopian Fintech Startup",
       image: "https://images.pexels.com/photos/3184338/pexels-photo-3184338.jpeg",
       content: "Masada helped us understand how Ethiopian users interact with our mobile payment app. The insights were invaluable - we improved our user onboarding by 60% after implementing their recommendations.",
-      rating: 5
+      rating: 5,
+      metric: "60% improvement in onboarding"
     },
     {
       name: "Meron Teshome",
@@ -33,7 +34,8 @@ const SocialProof = () => {
       company: "Addis Tech Solutions",
       image: "https://images.pexels.com/photos/3184339/pexels-photo-3184339.jpeg", 
       content: "Testing with real Ethiopian users through Masada revealed cultural preferences we never considered. Our e-commerce platform now has 40% better conversion rates thanks to their local insights.",
-      rating: 5
+      rating: 5,
+      metric: "40% better conversion rates"
     },
     {
       name: "Samuel Bekele",
@@ -41,7 +43,8 @@ const SocialProof = () => {
       company: "EdTech Ethiopia",
       image: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg",
       content: "As a startup, we needed affordable user testing that understood our market. Masada provided exactly that - quick turnaround, relevant feedback, and pricing that worked for our budget.",
-      rating: 5
+      rating: 5,
+      metric: "24-hour turnaround"
     }
   ];
 
@@ -51,11 +54,6 @@ const SocialProof = () => {
 
   const prevTestimonial = () => {
     setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-  };
-
-  const handleCompanyClick = (company: any) => {
-    // In a real app, this would link to case studies or company pages
-    alert(`Learn more about how ${company.name} uses Masada for Ethiopian user testing!`);
   };
 
   const handleGetStarted = () => {
@@ -72,16 +70,15 @@ const SocialProof = () => {
           </p>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center opacity-60">
             {companies.map((company, index) => (
-              <button
+              <div
                 key={company.name}
-                onClick={() => handleCompanyClick(company)}
-                className="flex items-center justify-center h-12 grayscale hover:grayscale-0 transition-all duration-300 hover:scale-110 cursor-pointer"
+                className="flex items-center justify-center h-12 grayscale hover:grayscale-0 transition-all duration-300 hover:scale-110"
               >
                 <div className="flex items-center space-x-2">
                   <span className="text-2xl">{company.logo}</span>
                   <div className="text-sm font-semibold text-slate-600">{company.name}</div>
                 </div>
-              </button>
+              </div>
             ))}
           </div>
         </div>
@@ -90,7 +87,7 @@ const SocialProof = () => {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">
-              What Ethiopian Companies Say
+              Real Results from Ethiopian Companies
             </h2>
             <p className="text-xl text-slate-600">
               See how local tech companies are using Masada to build better products
@@ -101,9 +98,17 @@ const SocialProof = () => {
             <div className="bg-white rounded-2xl p-8 md:p-12 shadow-lg border border-slate-200">
               <Quote className="h-8 w-8 text-blue-600 mb-6" />
               
-              <blockquote className="text-xl text-slate-700 mb-8 leading-relaxed">
+              <blockquote className="text-xl text-slate-700 mb-6 leading-relaxed">
                 "{testimonials[currentTestimonial].content}"
               </blockquote>
+
+              {/* Metric Highlight */}
+              <div className="bg-blue-50 rounded-lg p-4 mb-6">
+                <div className="text-2xl font-bold text-blue-600 mb-1">
+                  {testimonials[currentTestimonial].metric}
+                </div>
+                <div className="text-sm text-blue-700">Key improvement achieved</div>
+              </div>
 
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
@@ -167,40 +172,43 @@ const SocialProof = () => {
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 text-center">
-          <div>
+          <div className="bg-white rounded-xl p-6 shadow-sm">
             <div className="text-4xl font-bold text-blue-600 mb-2">95%</div>
             <div className="text-slate-600">Client Satisfaction</div>
           </div>
-          <div>
+          <div className="bg-white rounded-xl p-6 shadow-sm">
             <div className="text-4xl font-bold text-blue-600 mb-2">24hrs</div>
             <div className="text-slate-600">Average Response Time</div>
           </div>
-          <div>
+          <div className="bg-white rounded-xl p-6 shadow-sm">
             <div className="text-4xl font-bold text-blue-600 mb-2">500+</div>
             <div className="text-slate-600">Ethiopian Testers</div>
           </div>
         </div>
 
-        {/* CTA */}
+        {/* Final CTA */}
         <div className="text-center mt-16">
-          <h3 className="text-2xl font-bold text-slate-900 mb-4">
-            Ready to Join These Success Stories?
-          </h3>
-          <p className="text-slate-600 mb-6 max-w-2xl mx-auto">
-            Start testing with Ethiopian users today and see how local insights can transform your product.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3"
-              onClick={handleGetStarted}
-            >
-              Start Free Trial
-            </Button>
-            <Link href="/product">
-              <Button variant="outline" className="border-slate-300 hover:bg-slate-100 px-8 py-3">
-                See How It Works
+          <div className="bg-gradient-to-r from-blue-600 to-sky-600 rounded-2xl p-8 md:p-12 text-white">
+            <h3 className="text-2xl sm:text-3xl font-bold mb-4">
+              Ready to Join These Success Stories?
+            </h3>
+            <p className="text-xl opacity-90 mb-6 max-w-2xl mx-auto">
+              Start testing with Ethiopian users today and see how local insights can transform your product.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                className="bg-white text-blue-600 hover:bg-slate-100 px-8 py-3 text-lg"
+                onClick={handleGetStarted}
+              >
+                Start Testing Today
+                <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-            </Link>
+              <Link href="/product">
+                <Button variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 px-8 py-3 text-lg">
+                  See How It Works
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
