@@ -3,6 +3,7 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -10,6 +11,9 @@ interface ProtectedRouteProps {
   redirectTo?: string;
 }
 
+/**
+ * Protected route wrapper component
+ */
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
   children, 
   requiredUserType,
@@ -21,13 +25,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   useEffect(() => {
     if (!isLoading) {
       if (!user) {
-        // No user logged in, redirect to login
         router.push('/auth/login');
         return;
       }
 
       if (requiredUserType && user.userType !== requiredUserType) {
-        // Wrong user type, redirect to appropriate dashboard
         if (redirectTo) {
           router.push(redirectTo);
         } else {
@@ -42,17 +44,13 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+        <LoadingSpinner size="lg" />
       </div>
     );
   }
 
-  if (!user) {
-    return null; // Will redirect to login
-  }
-
-  if (requiredUserType && user.userType !== requiredUserType) {
-    return null; // Will redirect to appropriate dashboard
+  if (!user || (requiredUserType && user.userType !== requiredUserType)) {
+    return null;
   }
 
   return <>{children}</>;

@@ -1,12 +1,14 @@
 'use client';
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import Link from 'next/link';
-import { Target, Twitter, Linkedin, Github, Mail, Facebook, Youtube, Instagram } from 'lucide-react';
+import { Twitter, Linkedin, Github, Mail, Facebook, Youtube, Instagram } from 'lucide-react';
 
-const Footer = () => {
-  const handleSocialClick = (platform: string) => {
-    // In a real app, these would link to actual social media profiles
+/**
+ * Footer component with navigation links and social media
+ */
+const Footer: React.FC = () => {
+  const handleSocialClick = useCallback((platform: string) => {
     const urls = {
       twitter: 'https://twitter.com/masadaethiopia',
       linkedin: 'https://linkedin.com/company/masada-ethiopia',
@@ -22,12 +24,30 @@ const Footer = () => {
     } else {
       window.open(urls[platform as keyof typeof urls], '_blank');
     }
-  };
+  }, []);
 
-  const handleLinkClick = (section: string) => {
-    // Mock navigation for footer links
+  const handleLinkClick = useCallback((section: string) => {
     alert(`${section} page coming soon!`);
-  };
+  }, []);
+
+  const navigationLinks = [
+    { label: 'Blog', action: () => handleLinkClick('Blog') },
+    { label: 'Knowledge Hub', action: () => handleLinkClick('Knowledge Hub') },
+    { label: 'Partners', action: () => handleLinkClick('Partners') },
+    { label: 'Education', action: () => handleLinkClick('Education') },
+    { label: 'FAQ', action: () => handleLinkClick('FAQ') },
+    { label: 'Company', action: () => handleLinkClick('Company') },
+    { label: 'Webinars', action: () => handleLinkClick('Webinars') },
+    { label: 'Resources', action: () => handleLinkClick('Resources') }
+  ];
+
+  const socialIcons = [
+    { icon: Facebook, platform: 'facebook' },
+    { icon: Twitter, platform: 'twitter' },
+    { icon: Linkedin, platform: 'linkedin' },
+    { icon: Youtube, platform: 'youtube' },
+    { icon: Instagram, platform: 'instagram' }
+  ];
 
   return (
     <footer className="bg-slate-900 border-t border-slate-200">
@@ -38,57 +58,18 @@ const Footer = () => {
           <div className="flex flex-wrap justify-between items-start mb-8">
             {/* Left Side - Main Navigation */}
             <div className="flex flex-wrap gap-8 mb-6 lg:mb-0">
-              <button 
-                onClick={() => handleLinkClick('Blog')}
-                className="text-slate-300 hover:text-white transition-colors text-sm"
-              >
-                Blog
-              </button>
-              <button 
-                onClick={() => handleLinkClick('Knowledge Hub')}
-                className="text-slate-300 hover:text-white transition-colors text-sm"
-              >
-                Knowledge Hub
-              </button>
-              <button 
-                onClick={() => handleLinkClick('Partners')}
-                className="text-slate-300 hover:text-white transition-colors text-sm"
-              >
-                Partners
-              </button>
-              <button 
-                onClick={() => handleLinkClick('Education')}
-                className="text-slate-300 hover:text-white transition-colors text-sm"
-              >
-                Education
-              </button>
-              <button 
-                onClick={() => handleLinkClick('FAQ')}
-                className="text-slate-300 hover:text-white transition-colors text-sm"
-              >
-                FAQ
-              </button>
-              <button 
-                onClick={() => handleLinkClick('Company')}
-                className="text-slate-300 hover:text-white transition-colors text-sm"
-              >
-                Company
-              </button>
+              {navigationLinks.map((link) => (
+                <button 
+                  key={link.label}
+                  onClick={link.action}
+                  className="text-slate-300 hover:text-white transition-colors text-sm"
+                >
+                  {link.label}
+                </button>
+              ))}
               <Link href="/pricing" className="text-slate-300 hover:text-white transition-colors text-sm">
                 Pricing
               </Link>
-              <button 
-                onClick={() => handleLinkClick('Webinars')}
-                className="text-slate-300 hover:text-white transition-colors text-sm"
-              >
-                Webinars
-              </button>
-              <button 
-                onClick={() => handleLinkClick('Resources')}
-                className="text-slate-300 hover:text-white transition-colors text-sm"
-              >
-                Resources
-              </button>
             </div>
 
             {/* Right Side - CTA Links */}
@@ -110,41 +91,16 @@ const Footer = () => {
 
           {/* Middle Section - Social Media Icons */}
           <div className="flex justify-start gap-4 mb-8">
-            <button
-              onClick={() => handleSocialClick('facebook')}
-              className="text-slate-400 hover:text-white transition-colors"
-              aria-label="Facebook"
-            >
-              <Facebook className="h-5 w-5" />
-            </button>
-            <button
-              onClick={() => handleSocialClick('twitter')}
-              className="text-slate-400 hover:text-white transition-colors"
-              aria-label="Twitter"
-            >
-              <Twitter className="h-5 w-5" />
-            </button>
-            <button
-              onClick={() => handleSocialClick('linkedin')}
-              className="text-slate-400 hover:text-white transition-colors"
-              aria-label="LinkedIn"
-            >
-              <Linkedin className="h-5 w-5" />
-            </button>
-            <button
-              onClick={() => handleSocialClick('youtube')}
-              className="text-slate-400 hover:text-white transition-colors"
-              aria-label="YouTube"
-            >
-              <Youtube className="h-5 w-5" />
-            </button>
-            <button
-              onClick={() => handleSocialClick('instagram')}
-              className="text-slate-400 hover:text-white transition-colors"
-              aria-label="Instagram"
-            >
-              <Instagram className="h-5 w-5" />
-            </button>
+            {socialIcons.map(({ icon: Icon, platform }) => (
+              <button
+                key={platform}
+                onClick={() => handleSocialClick(platform)}
+                className="text-slate-400 hover:text-white transition-colors"
+                aria-label={platform}
+              >
+                <Icon className="h-5 w-5" />
+              </button>
+            ))}
           </div>
         </div>
 

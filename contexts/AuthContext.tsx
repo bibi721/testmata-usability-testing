@@ -1,6 +1,7 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 interface User {
   id: string;
@@ -34,28 +35,25 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 // Mock database to track registered emails
 const mockUserDatabase: { [email: string]: { userType: 'customer' | 'tester'; userData: User } } = {};
 
+/**
+ * Authentication provider component
+ */
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useLocalStorage<User | null>('user', null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate checking for existing session
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      const userData = JSON.parse(savedUser);
-      setUser(userData);
-      // Also add to mock database if not already there
-      if (!mockUserDatabase[userData.email]) {
-        mockUserDatabase[userData.email] = {
-          userType: userData.userType,
-          userData: userData
-        };
-      }
+    // Add existing user to mock database if not already there
+    if (user && !mockUserDatabase[user.email]) {
+      mockUserDatabase[user.email] = {
+        userType: user.userType,
+        userData: user
+      };
     }
     setIsLoading(false);
-  }, []);
+  }, [user]);
 
-  const checkEmailExists = async (email: string): Promise<{ exists: boolean; userType?: 'customer' | 'tester' }> => {
+  const checkEmailExists = useCallback(async (email: string): Promise<{ exists: boolean; userType?: 'customer' | 'tester' }> => {
     // Simulate API call delay
     await new Promise(resolve => setTimeout(resolve, 500));
     
@@ -68,9 +66,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     
     return { exists: false };
-  };
+  }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = useCallback(async (email: string, password: string) => {
     setIsLoading(true);
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1500));
@@ -84,13 +82,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     
     const mockUser = existingUser.userData;
-    
     setUser(mockUser);
-    localStorage.setItem('user', JSON.stringify(mockUser));
     setIsLoading(false);
-  };
+  }, [setUser]);
 
-  const register = async (email: string, password: string, name: string, userType: 'customer' | 'tester' = 'customer') => {
+  const register = useCallback(async (email: string, password: string, name: string, userType: 'customer' | 'tester' = 'customer') => {
     setIsLoading(true);
     
     const normalizedEmail = email.toLowerCase();
@@ -129,27 +125,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
     
     setUser(mockUser);
-    localStorage.setItem('user', JSON.stringify(mockUser));
     setIsLoading(false);
-  };
+  }, [checkEmailExists, setUser]);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     setUser(null);
-    localStorage.removeItem('user');
-  };
+  }, [setUser]);
 
-  const updateUser = (userData: Partial<User>) => {
+  const updateUser = useCallback((userData: Partial<User>) => {
     if (user) {
       const updatedUser = { ...user, ...userData };
       setUser(updatedUser);
-      localStorage.setItem('user', JSON.stringify(updatedUser));
       
       // Update mock database
       if (mockUserDatabase[user.email]) {
         mockUserDatabase[user.email].userData = updatedUser;
       }
     }
-  };
+  }, [user, setUser]);
 
   return (
     <AuthContext.Provider value={{
@@ -166,6 +159,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
+/**
+ * Hook to use authentication context
+ */
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {

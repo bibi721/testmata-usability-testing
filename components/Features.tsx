@@ -13,8 +13,13 @@ import {
   Smartphone,
   Shield
 } from 'lucide-react';
+import { SectionContainer } from '@/components/ui/section-container';
+import { FeatureCard } from '@/components/common/FeatureCard';
 
-const Features = () => {
+/**
+ * Features section showcasing platform capabilities
+ */
+const Features: React.FC = () => {
   const features = [
     {
       icon: Users,
@@ -73,72 +78,56 @@ const Features = () => {
   ];
 
   return (
-    <section className="py-20 bg-white">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">
-            Everything You Need for 
-            <span className="text-blue-600"> Ethiopian User Testing</span>
-          </h2>
-          <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-            Comprehensive usability testing designed specifically for the Ethiopian market. 
-            Get insights that matter for your local and regional success.
+    <SectionContainer>
+      <div className="text-center mb-16">
+        <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">
+          Everything You Need for 
+          <span className="text-blue-600"> Ethiopian User Testing</span>
+        </h2>
+        <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+          Comprehensive usability testing designed specifically for the Ethiopian market. 
+          Get insights that matter for your local and regional success.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {features.map((feature, index) => (
+          <FeatureCard
+            key={feature.title}
+            icon={feature.icon}
+            title={feature.title}
+            description={feature.description}
+            highlight={feature.highlight}
+            animationDelay={index * 100}
+          />
+        ))}
+      </div>
+
+      {/* Bottom CTA */}
+      <div className="text-center mt-16">
+        <div className="inline-flex items-center px-6 py-3 bg-slate-100 rounded-full text-slate-700 text-sm mb-6">
+          <span className="w-2 h-2 bg-green-500 rounded-full mr-3 animate-pulse" />
+          Helping Ethiopian startups and SMEs build better digital products
+        </div>
+        <div className="space-y-4">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/auth/register">
+              <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors">
+                Get Started
+              </button>
+            </Link>
+            <Link href="/pricing">
+              <button className="border border-slate-300 hover:bg-slate-50 text-slate-700 px-8 py-3 rounded-lg font-semibold transition-colors">
+                View Pricing
+              </button>
+            </Link>
+          </div>
+          <p className="text-sm text-slate-500">
+            ✓ No setup fees  •  ✓ Ethiopian user panel  •  ✓ Results in 24 hours
           </p>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {features.map((feature, index) => (
-            <div
-              key={feature.title}
-              className="group p-6 rounded-2xl border border-slate-200 hover:border-blue-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-white cursor-pointer"
-              style={{
-                animationDelay: `${index * 100}ms`,
-              }}
-            >
-              <div className="flex items-center justify-center w-12 h-12 bg-blue-50 rounded-lg mb-4 group-hover:bg-blue-100 group-hover:scale-110 transition-all duration-300">
-                <feature.icon className="h-6 w-6 text-blue-600" />
-              </div>
-              <div className="mb-3">
-                <span className="inline-block px-3 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">
-                  {feature.highlight}
-                </span>
-              </div>
-              <h3 className="text-xl font-semibold text-slate-900 mb-3 group-hover:text-blue-900 transition-colors">
-                {feature.title}
-              </h3>
-              <p className="text-slate-600 leading-relaxed">
-                {feature.description}
-              </p>
-            </div>
-          ))}
-        </div>
-
-        {/* Bottom CTA */}
-        <div className="text-center mt-16">
-          <div className="inline-flex items-center px-6 py-3 bg-slate-100 rounded-full text-slate-700 text-sm mb-6">
-            <span className="w-2 h-2 bg-green-500 rounded-full mr-3 animate-pulse"></span>
-            Helping Ethiopian startups and SMEs build better digital products
-          </div>
-          <div className="space-y-4">
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/auth/register">
-                <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors">
-                  Get Started
-                </button>
-              </Link>
-              <Link href="/pricing">
-                <button className="border border-slate-300 hover:bg-slate-50 text-slate-700 px-8 py-3 rounded-lg font-semibold transition-colors">
-                  View Pricing
-                </button>
-              </Link>
-            </div>
-            <p className="text-sm text-slate-500">
-              ✓ No setup fees  •  ✓ Ethiopian user panel  •  ✓ Results in 24 hours
-            </p>
-          </div>
-        </div>
       </div>
-    </section>
+    </SectionContainer>
   );
 };
 

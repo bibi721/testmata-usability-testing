@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -34,10 +34,14 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
+import { useToggle } from '@/hooks/useToggle';
 
-const Header = () => {
+/**
+ * Main navigation header component
+ */
+const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobileMenuOpen, toggleMobileMenu, setIsMobileMenuOpen] = useToggle(false);
   const pathname = usePathname();
   const { user, logout } = useAuth();
 
@@ -50,14 +54,14 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleMobileMenuClose = () => {
+  const handleMobileMenuClose = useCallback(() => {
     setIsMobileMenuOpen(false);
-  };
+  }, [setIsMobileMenuOpen]);
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     logout();
     setIsMobileMenuOpen(false);
-  };
+  }, [logout, setIsMobileMenuOpen]);
 
   const features = [
     {
@@ -263,7 +267,7 @@ const Header = () => {
             variant="ghost"
             size="sm"
             className="lg:hidden"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            onClick={toggleMobileMenu}
           >
             {isMobileMenuOpen ? (
               <X className="h-6 w-6" />
