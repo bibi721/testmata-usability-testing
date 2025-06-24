@@ -51,13 +51,13 @@ const TesterHeader = () => {
               Dashboard
             </Link>
             <Link 
-              href="/tester/tests" 
+              href="/tester/dashboard?tab=available" 
               className="text-slate-700 hover:text-blue-600 font-medium transition-colors"
             >
               Available Tests
             </Link>
             <Link 
-              href="/tester/earnings" 
+              href="/tester/dashboard?tab=earnings" 
               className="text-slate-700 hover:text-blue-600 font-medium transition-colors"
             >
               Earnings
@@ -166,14 +166,14 @@ const TesterHeader = () => {
                 Dashboard
               </Link>
               <Link
-                href="/tester/tests"
+                href="/tester/dashboard?tab=available"
                 className="block px-3 py-2 text-slate-700 hover:text-blue-600 hover:bg-slate-50 rounded-md transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Available Tests
               </Link>
               <Link
-                href="/tester/earnings"
+                href="/tester/dashboard?tab=earnings"
                 className="block px-3 py-2 text-slate-700 hover:text-blue-600 hover:bg-slate-50 rounded-md transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
               >

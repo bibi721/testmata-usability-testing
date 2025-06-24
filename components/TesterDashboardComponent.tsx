@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -34,7 +35,16 @@ import {
 
 const TesterDashboardComponent = () => {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState('available');
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get('tab');
+  const [activeTab, setActiveTab] = useState(tabParam || 'available');
+
+  // Update active tab when URL parameter changes
+  useEffect(() => {
+    if (tabParam && ['available', 'history', 'earnings', 'profile'].includes(tabParam)) {
+      setActiveTab(tabParam);
+    }
+  }, [tabParam]);
 
   // Mock tester profile data
   const testerProfile = {
