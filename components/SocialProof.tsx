@@ -7,39 +7,39 @@ import { Button } from '@/components/ui/button';
 const SocialProof = () => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
-  // Mock company logos
+  // Ethiopian tech companies and testimonials
   const companies = [
-    { name: "Microsoft", logo: "https://images.pexels.com/photos/4050314/pexels-photo-4050314.jpeg" },
-    { name: "Google", logo: "https://images.pexels.com/photos/5325854/pexels-photo-5325854.jpeg" },
-    { name: "Netflix", logo: "https://images.pexels.com/photos/4050314/pexels-photo-4050314.jpeg" },
-    { name: "Airbnb", logo: "https://images.pexels.com/photos/5325854/pexels-photo-5325854.jpeg" },
-    { name: "Spotify", logo: "https://images.pexels.com/photos/4050314/pexels-photo-4050314.jpeg" },
-    { name: "Uber", logo: "https://images.pexels.com/photos/5325854/pexels-photo-5325854.jpeg" }
+    { name: "Ride", logo: "🚗" },
+    { name: "Deliver Addis", logo: "🛵" },
+    { name: "Gebeya", logo: "💼" },
+    { name: "iCog Labs", logo: "🤖" },
+    { name: "Kazana", logo: "💳" },
+    { name: "Sheba Platform", logo: "🏪" }
   ];
 
   const testimonials = [
     {
-      name: "Sarah Johnson",
-      role: "Head of UX Design",
-      company: "TechFlow Inc.",
-      image: "https://images.pexels.com/photos/3184338/pexels-photo-3184338.jpeg",
-      content: "TestMata transformed how we approach user testing. The insights we get are incredibly detailed and actionable. Our conversion rates improved by 35% after implementing their recommendations.",
-      rating: 5
-    },
-    {
-      name: "Michael Chen",
+      name: "Dawit Hailu",
       role: "Product Manager",
-      company: "InnovateLabs",
-      image: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg", 
-      content: "The speed and quality of user feedback we get through TestMata is unmatched. We can now iterate on designs much faster and with confidence. It's become an essential part of our product development process.",
+      company: "Ethiopian Fintech Startup",
+      image: "https://images.pexels.com/photos/3184338/pexels-photo-3184338.jpeg",
+      content: "Masada helped us understand how Ethiopian users interact with our mobile payment app. The insights were invaluable - we improved our user onboarding by 60% after implementing their recommendations.",
       rating: 5
     },
     {
-      name: "Emily Rodriguez",
-      role: "UX Researcher",
-      company: "Digital Solutions Co.",
-      image: "https://images.pexels.com/photos/3184339/pexels-photo-3184339.jpeg",
-      content: "What I love most about TestMata is how it democratizes user research. Our entire team can now access user insights without needing specialized research skills. The AI-powered analysis is phenomenal.",
+      name: "Meron Teshome",
+      role: "UX Designer",
+      company: "Addis Tech Solutions",
+      image: "https://images.pexels.com/photos/3184339/pexels-photo-3184339.jpeg", 
+      content: "Testing with real Ethiopian users through Masada revealed cultural preferences we never considered. Our e-commerce platform now has 40% better conversion rates thanks to their local insights.",
+      rating: 5
+    },
+    {
+      name: "Samuel Bekele",
+      role: "Founder",
+      company: "EdTech Ethiopia",
+      image: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg",
+      content: "As a startup, we needed affordable user testing that understood our market. Masada provided exactly that - quick turnaround, relevant feedback, and pricing that worked for our budget.",
       rating: 5
     }
   ];
@@ -58,7 +58,7 @@ const SocialProof = () => {
         {/* Company Logos */}
         <div className="text-center mb-16">
           <p className="text-slate-600 mb-8 text-lg">
-            Trusted by leading companies worldwide
+            Trusted by Ethiopian tech companies
           </p>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center opacity-60">
             {companies.map((company, index) => (
@@ -66,8 +66,9 @@ const SocialProof = () => {
                 key={company.name}
                 className="flex items-center justify-center h-12 grayscale hover:grayscale-0 transition-all duration-300 hover:scale-110"
               >
-                <div className="w-24 h-8 bg-slate-400 rounded flex items-center justify-center text-xs font-semibold text-white">
-                  {company.name}
+                <div className="flex items-center space-x-2">
+                  <span className="text-2xl">{company.logo}</span>
+                  <div className="text-sm font-semibold text-slate-600">{company.name}</div>
                 </div>
               </div>
             ))}
@@ -78,10 +79,10 @@ const SocialProof = () => {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">
-              What Our Customers Say
+              What Ethiopian Companies Say
             </h2>
             <p className="text-xl text-slate-600">
-              See how teams like yours are using TestMata to build better products
+              See how local tech companies are using Masada to build better products
             </p>
           </div>
 
@@ -156,16 +157,16 @@ const SocialProof = () => {
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 text-center">
           <div>
-            <div className="text-4xl font-bold text-blue-600 mb-2">98%</div>
-            <div className="text-slate-600">Customer Satisfaction</div>
+            <div className="text-4xl font-bold text-blue-600 mb-2">95%</div>
+            <div className="text-slate-600">Client Satisfaction</div>
           </div>
           <div>
-            <div className="text-4xl font-bold text-blue-600 mb-2">24/7</div>
-            <div className="text-slate-600">Support Available</div>
+            <div className="text-4xl font-bold text-blue-600 mb-2">24hrs</div>
+            <div className="text-slate-600">Average Response Time</div>
           </div>
           <div>
-            <div className="text-4xl font-bold text-blue-600 mb-2">99.9%</div>
-            <div className="text-slate-600">Platform Uptime</div>
+            <div className="text-4xl font-bold text-blue-600 mb-2">500+</div>
+            <div className="text-slate-600">Ethiopian Testers</div>
           </div>
         </div>
       </div>

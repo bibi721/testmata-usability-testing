@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
@@ -19,21 +18,17 @@ import {
   TrendingUp,
   FileText,
   Settings,
-  Download,
   Filter,
   Search,
   MoreHorizontal,
-  Eye,
   MessageSquare,
   CheckCircle,
-  AlertCircle,
   Calendar
 } from 'lucide-react';
 
 const Dashboard = () => {
   const { user } = useAuth();
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState('overview');
 
   useEffect(() => {
     if (!user) {
@@ -45,34 +40,34 @@ const Dashboard = () => {
   const stats = [
     {
       title: "Total Tests",
-      value: "47",
-      change: "+12%",
+      value: "12",
+      change: "+3 this month",
       trend: "up",
       icon: Target,
       color: "blue"
     },
     {
-      title: "Active Participants",
-      value: "1,234",
-      change: "+23%",
+      title: "Ethiopian Testers",
+      value: "45",
+      change: "Active this week",
       trend: "up", 
       icon: Users,
       color: "green"
     },
     {
       title: "Avg. Success Rate",
-      value: "87.3%",
-      change: "+5.2%",
+      value: "78%",
+      change: "+12% improvement",
       trend: "up",
       icon: TrendingUp,
       color: "purple"
     },
     {
-      title: "Tests This Month",
-      value: "23",
-      change: "8 remaining",
+      title: "Response Time",
+      value: "18hrs",
+      change: "Average turnaround",
       trend: "neutral",
-      icon: BarChart3,
+      icon: Clock,
       color: "orange"
     }
   ];
@@ -80,37 +75,37 @@ const Dashboard = () => {
   const recentTests = [
     {
       id: 1,
-      name: "E-commerce Checkout Flow",
+      name: "E-commerce Mobile App",
       status: "completed",
-      participants: 25,
+      participants: 8,
       completion: 100,
-      successRate: 92,
+      successRate: 75,
       date: "2 hours ago",
-      insights: 8
-    },
-    {
-      id: 2,
-      name: "Mobile App Onboarding",
-      status: "in-progress",
-      participants: 15,
-      completion: 67,
-      successRate: 84,
-      date: "5 hours ago",
       insights: 5
     },
     {
+      id: 2,
+      name: "Banking Website Usability",
+      status: "in-progress",
+      participants: 5,
+      completion: 60,
+      successRate: 80,
+      date: "6 hours ago",
+      insights: 3
+    },
+    {
       id: 3,
-      name: "Landing Page Optimization",
+      name: "Food Delivery App Flow",
       status: "completed",
-      participants: 30,
+      participants: 10,
       completion: 100,
-      successRate: 78,
+      successRate: 85,
       date: "1 day ago",
-      insights: 12
+      insights: 7
     },
     {
       id: 4,
-      name: "Dashboard Usability Study",
+      name: "Educational Platform Test",
       status: "scheduled",
       participants: 0,
       completion: 0,
@@ -123,21 +118,21 @@ const Dashboard = () => {
   const quickActions = [
     {
       title: "Create New Test",
-      description: "Start a new usability test",
+      description: "Start testing with Ethiopian users",
       icon: Plus,
       action: "create",
       color: "blue"
     },
     {
       title: "View Analytics", 
-      description: "Analyze test results",
+      description: "Analyze your test results",
       icon: BarChart3,
       action: "analytics",
       color: "green"
     },
     {
-      title: "Manage Panel",
-      description: "Configure test participants",
+      title: "Ethiopian Panel",
+      description: "Browse available testers",
       icon: Users,
       action: "panel",
       color: "purple"
@@ -167,7 +162,7 @@ const Dashboard = () => {
               Welcome back, {user.name}
             </h1>
             <p className="text-slate-600">
-              Here's what's happening with your tests today.
+              Here's how your Ethiopian user testing is performing.
             </p>
           </div>
           <div className="flex items-center space-x-4 mt-4 sm:mt-0">
@@ -194,10 +189,7 @@ const Dashboard = () => {
                     <p className="text-2xl font-bold text-slate-900">
                       {stat.value}
                     </p>
-                    <p className={`text-sm mt-1 ${
-                      stat.trend === 'up' ? 'text-green-600' : 
-                      stat.trend === 'down' ? 'text-red-600' : 'text-slate-500'
-                    }`}>
+                    <p className="text-sm mt-1 text-slate-500">
                       {stat.change}
                     </p>
                   </div>
@@ -222,7 +214,7 @@ const Dashboard = () => {
 
         {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column - Tests and Analytics */}
+          {/* Left Column - Tests */}
           <div className="lg:col-span-2 space-y-8">
             {/* Recent Tests */}
             <Card className="border-slate-200">
@@ -233,17 +225,13 @@ const Dashboard = () => {
                       Recent Tests
                     </CardTitle>
                     <CardDescription>
-                      Monitor your ongoing and completed tests
+                      Your Ethiopian user testing sessions
                     </CardDescription>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Button variant="outline" size="sm">
                       <Filter className="h-4 w-4 mr-2" />
                       Filter
-                    </Button>
-                    <Button variant="outline" size="sm">
-                      <Search className="h-4 w-4 mr-2" />
-                      Search
                     </Button>
                   </div>
                 </div>
@@ -274,7 +262,7 @@ const Dashboard = () => {
                           <div className="flex items-center space-x-4 mt-1 text-sm text-slate-500">
                             <span className="flex items-center">
                               <Users className="h-3 w-3 mr-1" />
-                              {test.participants} participants
+                              {test.participants} Ethiopian testers
                             </span>
                             <span>{test.date}</span>
                             {test.insights > 0 && (
@@ -312,40 +300,9 @@ const Dashboard = () => {
                 </div>
               </CardContent>
             </Card>
-
-            {/* Analytics Overview */}
-            <Card className="border-slate-200">
-              <CardHeader>
-                <CardTitle className="text-xl font-semibold text-slate-900">
-                  Analytics Overview
-                </CardTitle>
-                <CardDescription>
-                  Key metrics from your recent tests
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="text-center p-4 bg-blue-50 rounded-lg">
-                    <div className="text-3xl font-bold text-blue-600 mb-2">2:34</div>
-                    <div className="text-sm text-slate-600">Avg. Task Time</div>
-                    <div className="text-xs text-green-600 mt-1">↓ 23% from last month</div>
-                  </div>
-                  <div className="text-center p-4 bg-green-50 rounded-lg">
-                    <div className="text-3xl font-bold text-green-600 mb-2">87%</div>
-                    <div className="text-sm text-slate-600">Success Rate</div>
-                    <div className="text-xs text-green-600 mt-1">↑ 5% from last month</div>
-                  </div>
-                  <div className="text-center p-4 bg-purple-50 rounded-lg">
-                    <div className="text-3xl font-bold text-purple-600 mb-2">4.2</div>
-                    <div className="text-sm text-slate-600">User Satisfaction</div>
-                    <div className="text-xs text-green-600 mt-1">↑ 0.3 from last month</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
           </div>
 
-          {/* Right Column - Quick Actions and Account Info */}
+          {/* Right Column - Quick Actions and Account */}
           <div className="space-y-8">
             {/* Quick Actions */}
             <Card className="border-slate-200">
@@ -416,9 +373,9 @@ const Dashboard = () => {
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span className="text-slate-600">Tests this month</span>
-                      <span className="text-slate-900">23 / 50</span>
+                      <span className="text-slate-900">12 / 25</span>
                     </div>
-                    <Progress value={46} className="h-2" />
+                    <Progress value={48} className="h-2" />
                   </div>
                 </div>
 
@@ -430,46 +387,6 @@ const Dashboard = () => {
                   <Button variant="outline" className="w-full">
                     Upgrade Plan
                   </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Recent Activity */}
-            <Card className="border-slate-200">
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold text-slate-900">
-                  Recent Activity
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <div className="p-1 bg-green-100 rounded-full">
-                      <CheckCircle className="h-3 w-3 text-green-600" />
-                    </div>
-                    <div className="flex-1 text-sm">
-                      <div className="text-slate-900">Test completed</div>
-                      <div className="text-slate-500">E-commerce Checkout Flow - 2 hours ago</div>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="p-1 bg-blue-100 rounded-full">
-                      <Users className="h-3 w-3 text-blue-600" />
-                    </div>
-                    <div className="flex-1 text-sm">
-                      <div className="text-slate-900">New participants recruited</div>
-                      <div className="text-slate-500">Mobile App Onboarding - 5 hours ago</div>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="p-1 bg-purple-100 rounded-full">
-                      <FileText className="h-3 w-3 text-purple-600" />
-                    </div>
-                    <div className="flex-1 text-sm">
-                      <div className="text-slate-900">Report generated</div>
-                      <div className="text-slate-500">Landing Page Optimization - 1 day ago</div>
-                    </div>
-                  </div>
                 </div>
               </CardContent>
             </Card>

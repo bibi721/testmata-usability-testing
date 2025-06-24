@@ -41,20 +41,20 @@ const Header = () => {
 
   const features = [
     {
-      title: "User Testing",
-      description: "Get feedback from real users on your designs",
+      title: "Ethiopian User Testing",
+      description: "Get feedback from real Ethiopian users on your applications",
       icon: Users,
       href: "/features/user-testing"
     },
     {
       title: "Analytics Dashboard",
-      description: "Comprehensive insights and reporting",
+      description: "Comprehensive insights tailored for Ethiopian market",
       icon: BarChart3,
       href: "/features/analytics"
     },
     {
-      title: "UX Research",
-      description: "Discover usability issues before they impact users",
+      title: "Local UX Research",
+      description: "Discover usability issues specific to Ethiopian users",
       icon: Lightbulb,
       href: "/features/research"
     }
@@ -72,7 +72,7 @@ const Header = () => {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <Target className="h-8 w-8 text-blue-600" />
-            <span className="text-xl font-bold text-slate-900">TestMata</span>
+            <span className="text-xl font-bold text-slate-900">Masada</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -123,14 +123,6 @@ const Header = () => {
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
-
-              <NavigationMenuItem>
-                <Link href="/resources" legacyBehavior passHref>
-                  <NavigationMenuLink className="text-slate-700 hover:text-blue-600 px-4 py-2 rounded-md transition-colors">
-                    Resources
-                  </NavigationMenuLink>
-                </Link>
-              </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
 
@@ -160,7 +152,7 @@ const Header = () => {
                 </Link>
                 <Link href="/auth/register">
                   <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-                    Start Free Trial
+                    Start Testing
                   </Button>
                 </Link>
               </>
@@ -200,13 +192,6 @@ const Header = () => {
               >
                 Pricing
               </Link>
-              <Link
-                href="/resources"
-                className="block px-3 py-2 text-slate-700 hover:text-blue-600 hover:bg-slate-50 rounded-md transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Resources
-              </Link>
               {user ? (
                 <>
                   <Link
@@ -240,7 +225,7 @@ const Header = () => {
                     className="block px-3 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    Start Free Trial
+                    Start Testing
                   </Link>
                 </>
               )}

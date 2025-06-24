@@ -7,7 +7,7 @@ const Footer = () => {
     Product: [
       { name: 'Features', href: '/features' },
       { name: 'Pricing', href: '/pricing' },
-      { name: 'Integrations', href: '/integrations' },
+      { name: 'Ethiopian Panel', href: '/panel' },
       { name: 'API', href: '/api' },
     ],
     Company: [
@@ -20,13 +20,13 @@ const Footer = () => {
       { name: 'Documentation', href: '/docs' },
       { name: 'Help Center', href: '/help' },
       { name: 'Community', href: '/community' },
-      { name: 'Status', href: '/status' },
+      { name: 'Case Studies', href: '/case-studies' },
     ],
     Legal: [
       { name: 'Privacy Policy', href: '/privacy' },
       { name: 'Terms of Service', href: '/terms' },
-      { name: 'Cookie Policy', href: '/cookies' },
-      { name: 'GDPR', href: '/gdpr' },
+      { name: 'Data Protection', href: '/data-protection' },
+      { name: 'Ethiopian Compliance', href: '/compliance' },
     ],
   };
 
@@ -39,10 +39,11 @@ const Footer = () => {
             <div className="lg:col-span-2">
               <Link href="/" className="flex items-center space-x-2 mb-4">
                 <Target className="h-8 w-8 text-blue-400" />
-                <span className="text-xl font-bold">TestMata</span>
+                <span className="text-xl font-bold">Masada</span>
               </Link>
               <p className="text-slate-400 mb-6 max-w-md">
-                Comprehensive usability testing platform that helps you understand your users and improve their experience.
+                Professional usability testing platform designed for Ethiopian tech companies and small businesses. 
+                Get insights from real Ethiopian users.
               </p>
               <div className="flex space-x-4">
                 <a
@@ -67,7 +68,7 @@ const Footer = () => {
                   <Github className="h-5 w-5" />
                 </a>
                 <a
-                  href="mailto:hello@testmata.com"
+                  href="mailto:hello@masada.et"
                   className="text-slate-400 hover:text-blue-400 transition-colors"
                   aria-label="Email"
                 >
@@ -101,11 +102,11 @@ const Footer = () => {
         <div className="border-t border-slate-800 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-slate-400 text-sm">
-              © 2025 TestMata. All rights reserved.
+              © 2025 Masada. All rights reserved.
             </p>
             <div className="mt-4 md:mt-0">
               <p className="text-slate-400 text-sm">
-                Made with ❤️ for better user experiences
+                Made in Ethiopia 🇪🇹 for Ethiopian businesses
               </p>
             </div>
           </div>

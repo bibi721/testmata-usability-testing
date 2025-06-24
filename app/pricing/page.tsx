@@ -13,10 +13,8 @@ import {
   ArrowRight, 
   Users, 
   Zap, 
-  Shield, 
-  HeadphonesIcon,
-  Crown,
-  Building
+  Building,
+  HeadphonesIcon
 } from 'lucide-react';
 
 const PricingPage = () => {
@@ -25,22 +23,21 @@ const PricingPage = () => {
   const plans = [
     {
       name: "Starter",
-      description: "Perfect for small teams and individual researchers",
+      description: "Perfect for Ethiopian startups and small businesses",
       icon: Users,
-      price: { monthly: 29, yearly: 24 },
+      price: { monthly: 15, yearly: 12 },
       features: [
-        "Up to 50 tests per month",
+        "Up to 10 tests per month",
+        "Ethiopian user panel access",
         "Basic screen recordings",
-        "Standard analytics dashboard",
         "Email support",
-        "3 team members",
-        "Basic integrations",
-        "PDF reports",
-        "30-day data retention"
+        "2 team members",
+        "Mobile & desktop testing",
+        "Basic analytics",
+        "Amharic & English support"
       ],
       limitations: [
-        "No advanced heatmaps",
-        "No custom branding",
+        "No advanced analytics",
         "Limited export options"
       ],
       cta: "Start Free Trial",
@@ -48,22 +45,21 @@ const PricingPage = () => {
     },
     {
       name: "Professional", 
-      description: "Ideal for growing teams and comprehensive testing",
+      description: "Ideal for growing Ethiopian tech companies",
       icon: Zap,
-      price: { monthly: 89, yearly: 74 },
+      price: { monthly: 45, yearly: 38 },
       features: [
-        "Up to 200 tests per month",
-        "HD screen recordings + audio",
-        "Advanced heatmaps & click tracking",
-        "AI-powered insights",
+        "Up to 50 tests per month",
+        "Priority Ethiopian tester access",
+        "HD recordings + audio feedback",
+        "Advanced analytics dashboard",
         "Priority support",
-        "10 team members",
-        "All integrations",
-        "Custom reports & branding",
-        "1-year data retention",
-        "A/B testing capabilities",
-        "Advanced filtering",
-        "API access"
+        "5 team members",
+        "Custom task scenarios",
+        "Detailed reports & insights",
+        "Cultural context analysis",
+        "API access",
+        "Advanced filtering"
       ],
       limitations: [],
       cta: "Start Free Trial",
@@ -71,23 +67,22 @@ const PricingPage = () => {
     },
     {
       name: "Enterprise",
-      description: "Custom solutions for large organizations",
+      description: "Custom solutions for large Ethiopian organizations",
       icon: Building,
       price: { monthly: "Custom", yearly: "Custom" },
       features: [
         "Unlimited tests",
-        "Advanced security & compliance",
-        "Dedicated account manager",
-        "24/7 phone support",
-        "Unlimited team members",
+        "Dedicated Ethiopian tester pool",
         "Custom integrations",
+        "Dedicated account manager",
+        "24/7 support",
+        "Unlimited team members",
         "White-label solution",
-        "Advanced user analytics",
-        "Unlimited data retention",
-        "SSO integration",
-        "Advanced permissions",
-        "Custom training",
-        "SLA guarantee"
+        "Advanced security",
+        "Custom reporting",
+        "On-site training",
+        "SLA guarantee",
+        "Regional tester distribution"
       ],
       limitations: [],
       cta: "Contact Sales",
@@ -97,59 +92,36 @@ const PricingPage = () => {
 
   const faqs = [
     {
-      question: "What's included in the free trial?",
-      answer: "The 14-day free trial includes full access to all features of the Professional plan, including unlimited tests, advanced analytics, and priority support. No credit card required."
+      question: "How does the Ethiopian user panel work?",
+      answer: "Our panel includes 500+ verified Ethiopian users from different regions, age groups, and backgrounds. We recruit participants based on your target demographics and provide feedback in both Amharic and English."
     },
     {
-      question: "Can I change plans anytime?",
-      answer: "Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately, and we'll prorate any billing adjustments."
+      question: "What's included in the free trial?",
+      answer: "The 14-day free trial includes full access to the Professional plan features, including 5 tests with Ethiopian users, advanced analytics, and priority support."
+    },
+    {
+      question: "Do you support testing in Amharic?",
+      answer: "Yes! Our Ethiopian testers can provide feedback in both Amharic and English. We also support testing interfaces in Amharic to ensure cultural relevance."
+    },
+    {
+      question: "How quickly do I get results?",
+      answer: "Most tests are completed within 24 hours. Our Ethiopian user panel is active throughout the day, ensuring quick turnaround times for your testing needs."
+    },
+    {
+      question: "What types of businesses use Masada?",
+      answer: "Ethiopian startups, SMEs, e-commerce sites, fintech companies, educational platforms, and any business wanting to understand Ethiopian user behavior and preferences."
+    },
+    {
+      question: "Can I test mobile apps?",
+      answer: "Absolutely! We support testing of mobile apps, websites, and web applications across different devices commonly used in Ethiopia, with focus on mobile-first experiences."
     },
     {
       question: "What payment methods do you accept?",
-      answer: "We accept all major credit cards (Visa, Mastercard, American Express, Discover) and PayPal. Enterprise customers can also pay by invoice."
-    },
-    {
-      question: "Is there a setup fee?",
-      answer: "No setup fees for any plan. You only pay the monthly or yearly subscription fee."
-    },
-    {
-      question: "How does the user panel work?",
-      answer: "Our global panel includes 100,000+ pre-screened users across 50+ countries. You can target specific demographics, and we'll recruit participants for your tests within hours."
-    },
-    {
-      question: "Do you offer custom integrations?",
-      answer: "Yes, Enterprise customers can request custom integrations. We have extensive API documentation and can work with your team to build custom solutions."
-    },
-    {
-      question: "What's your refund policy?",
-      answer: "We offer a 30-day money-back guarantee. If you're not satisfied with TestMata, we'll refund your payment in full, no questions asked."
+      answer: "We accept major credit cards, PayPal, and are working on integrating Ethiopian mobile payment solutions like M-Birr and HelloCash for local convenience."
     },
     {
       question: "Is my data secure?",
-      answer: "Absolutely. We're SOC 2 certified, GDPR compliant, and use enterprise-grade encryption. Your data is stored securely and never shared with third parties."
-    }
-  ];
-
-  const addOns = [
-    {
-      name: "Additional Test Credits",
-      description: "Extra tests beyond your plan limit",
-      price: "$2 per test"
-    },
-    {
-      name: "Advanced Analytics Package",
-      description: "Custom dashboards and advanced reporting",
-      price: "$50/month"
-    },
-    {
-      name: "Priority Recruiting",
-      description: "Faster participant recruitment (2-4 hours)",
-      price: "$100/month"
-    },
-    {
-      name: "Custom Integrations",
-      description: "Build custom integrations with your tools",
-      price: "Contact us"
+      answer: "Yes, we use enterprise-grade security and comply with international data protection standards. All user data is encrypted and stored securely."
     }
   ];
 
@@ -160,10 +132,10 @@ const PricingPage = () => {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-6">
-              Simple, Transparent <span className="text-blue-600">Pricing</span>
+              Affordable Testing for <span className="text-blue-600">Ethiopian Businesses</span>
             </h1>
             <p className="text-xl text-slate-600 mb-8 max-w-2xl mx-auto">
-              Choose the perfect plan for your team. Start with a free trial and scale as you grow.
+              Pricing designed for the Ethiopian market. Start with a free trial and scale as you grow.
             </p>
 
             {/* Billing Toggle */}
@@ -180,7 +152,7 @@ const PricingPage = () => {
                 Yearly
               </span>
               <Badge className="bg-green-100 text-green-700 ml-2">
-                Save 17%
+                Save 20%
               </Badge>
             </div>
           </div>
@@ -289,92 +261,6 @@ const PricingPage = () => {
         </div>
       </section>
 
-      {/* Feature Comparison */}
-      <section className="py-20 bg-slate-50">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">
-              Compare All <span className="text-blue-600">Features</span>
-            </h2>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              Detailed feature comparison to help you choose the right plan
-            </p>
-          </div>
-
-          <Card className="border-slate-200 shadow-lg">
-            <CardContent className="p-0">
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-slate-50 border-b border-slate-200">
-                    <tr>
-                      <th className="text-left p-6 font-semibold text-slate-900">Features</th>
-                      <th className="text-center p-6 font-semibold text-slate-900">Starter</th>
-                      <th className="text-center p-6 font-semibold text-slate-900 bg-blue-50">
-                        Professional
-                        <Badge className="ml-2 bg-blue-600 text-white">Popular</Badge>
-                      </th>
-                      <th className="text-center p-6 font-semibold text-slate-900">Enterprise</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-200">
-                    {[
-                      { feature: "Monthly Tests", starter: "50", professional: "200", enterprise: "Unlimited" },
-                      { feature: "Team Members", starter: "3", professional: "10", enterprise: "Unlimited" },
-                      { feature: "Screen Recording", starter: "✓", professional: "✓ + Audio", enterprise: "✓ + Audio" },
-                      { feature: "Heatmaps", starter: "×", professional: "✓", enterprise: "✓" },
-                      { feature: "AI Insights", starter: "×", professional: "✓", enterprise: "✓" },
-                      { feature: "Custom Branding", starter: "×", professional: "✓", enterprise: "✓" },
-                      { feature: "API Access", starter: "×", professional: "✓", enterprise: "✓" },
-                      { feature: "SSO Integration", starter: "×", professional: "×", enterprise: "✓" },
-                      { feature: "Support", starter: "Email", professional: "Priority", enterprise: "24/7 Phone" },
-                      { feature: "Data Retention", starter: "30 days", professional: "1 year", enterprise: "Unlimited" }
-                    ].map((row, index) => (
-                      <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
-                        <td className="p-6 font-medium text-slate-900">{row.feature}</td>
-                        <td className="p-6 text-center text-slate-700">{row.starter}</td>
-                        <td className="p-6 text-center text-slate-700 bg-blue-50/50">{row.professional}</td>
-                        <td className="p-6 text-center text-slate-700">{row.enterprise}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-
-      {/* Add-ons */}
-      <section className="py-20">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">
-              Extend Your <span className="text-blue-600">Capabilities</span>
-            </h2>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              Optional add-ons to customize your testing experience
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-            {addOns.map((addOn, index) => (
-              <Card key={index} className="border-slate-200 hover:border-blue-300 hover:shadow-lg transition-all duration-300">
-                <CardHeader>
-                  <CardTitle className="text-lg text-slate-900">{addOn.name}</CardTitle>
-                  <CardDescription className="text-slate-600">{addOn.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-blue-600 mb-4">{addOn.price}</div>
-                  <Button variant="outline" className="w-full">
-                    Add to Plan
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* FAQ */}
       <section className="py-20 bg-slate-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -383,7 +269,7 @@ const PricingPage = () => {
               Frequently Asked <span className="text-blue-600">Questions</span>
             </h2>
             <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              Everything you need to know about TestMata pricing and features
+              Everything you need to know about Masada pricing and Ethiopian user testing
             </p>
           </div>
 
@@ -419,11 +305,11 @@ const PricingPage = () => {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center text-white">
             <h2 className="text-3xl sm:text-4xl font-bold mb-6">
-              Start Testing Today
+              Start Testing with Ethiopian Users Today
             </h2>
             <p className="text-xl opacity-90 mb-8">
-              Join thousands of companies improving their user experience with TestMata. 
-              No credit card required for your 14-day free trial.
+              Join Ethiopian companies improving their products with real user insights. 
+              No setup fees, no long-term commitments.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="bg-white text-blue-600 hover:bg-slate-100 px-8 py-3 text-lg">
@@ -435,7 +321,7 @@ const PricingPage = () => {
               </Button>
             </div>
             <p className="text-sm opacity-75 mt-6">
-              ✓ No setup fees  •  ✓ Cancel anytime  •  ✓ 30-day money-back guarantee
+              ✓ No setup fees  •  ✓ Ethiopian user panel  •  ✓ Cancel anytime
             </p>
           </div>
         </div>

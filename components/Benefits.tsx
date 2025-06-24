@@ -7,35 +7,35 @@ const Benefits = () => {
   const benefits = [
     {
       icon: TrendingUp,
-      title: "Increase Conversion Rates",
-      description: "Our customers see an average of 34% improvement in conversion rates after implementing user testing insights.",
+      title: "Improve Local Market Success",
+      description: "Ethiopian companies using Masada see 40% better user engagement and 25% higher conversion rates by understanding local user behavior.",
       image: "https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg",
       stats: [
-        "34% average conversion increase",
-        "89% reduction in user complaints", 
-        "2.5x faster product iterations"
+        "40% improvement in user engagement",
+        "25% higher conversion rates", 
+        "60% faster product-market fit"
       ]
     },
     {
       icon: Users,
-      title: "Understand Your Users",
-      description: "Get deep insights into user behavior, preferences, and pain points through comprehensive testing sessions.",
+      title: "Understand Ethiopian Users",
+      description: "Get deep insights into how Ethiopian users interact with technology, their preferences, pain points, and cultural considerations.",
       image: "https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg",
       stats: [
-        "100,000+ global test participants",
-        "50+ countries represented",
-        "Real user feedback in 24 hours"
+        "500+ verified Ethiopian testers",
+        "Multiple regions represented",
+        "Feedback in Amharic and English"
       ]
     },
     {
       icon: Clock,
       title: "Save Time & Resources",
-      description: "Identify usability issues before launch and avoid costly redesigns. Test early, test often, ship with confidence.",
+      description: "Identify usability issues before launch and avoid costly redesigns. Perfect for Ethiopian startups and SMEs with limited budgets.",
       image: "https://images.pexels.com/photos/3184394/pexels-photo-3184394.jpeg",
       stats: [
-        "75% reduction in development cycles",
-        "90% fewer post-launch issues",
-        "Results delivered in 1-24 hours"
+        "24-hour turnaround time",
+        "50% reduction in development cycles",
+        "Affordable pricing for local market"
       ]
     }
   ];
@@ -45,11 +45,11 @@ const Benefits = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">
-            Why Choose <span className="text-blue-600">TestMata</span>
+            Why Ethiopian Companies Choose <span className="text-blue-600">Masada</span>
           </h2>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-            Join thousands of successful companies who've transformed their user experience 
-            with data-driven insights from real user testing.
+            Join growing Ethiopian tech companies who are building better products 
+            with insights from real local users.
           </p>
         </div>
 
@@ -117,15 +117,15 @@ const Benefits = () => {
               <Lightbulb className="h-8 w-8 text-blue-600" />
             </div>
             <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-4">
-              Ready to Transform Your User Experience?
+              Ready to Understand Your Ethiopian Users?
             </h3>
             <p className="text-lg text-slate-600 mb-8 max-w-2xl mx-auto">
-              Join over 10,000 companies who trust TestMata to deliver exceptional user experiences. 
-              Start your free trial today and see the difference user testing can make.
+              Join Ethiopian startups and SMEs who are building better products with Masada. 
+              Start testing with real Ethiopian users today.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors">
-                Start Free Trial
+                Start Testing Now
               </button>
               <button className="border border-slate-300 hover:bg-slate-50 text-slate-700 px-8 py-3 rounded-lg font-semibold transition-colors">
                 Schedule Demo

@@ -8,10 +8,10 @@ import Footer from '@/components/Footer';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'TestMata - Professional Usability Testing Platform',
-  description: 'Comprehensive usability testing platform that helps you understand your users and improve their experience. Get actionable insights from real user testing sessions.',
-  keywords: 'usability testing, user experience, UX research, user testing platform, user feedback',
-  authors: [{ name: 'TestMata' }],
+  title: 'Masada - Ethiopian Usability Testing Platform',
+  description: 'Professional usability testing platform designed for Ethiopian tech companies and small businesses. Get actionable insights from real Ethiopian users to improve your web applications and websites.',
+  keywords: 'usability testing Ethiopia, Ethiopian user testing, web app testing Ethiopia, UX research Ethiopia, user feedback Ethiopia',
+  authors: [{ name: 'Masada' }],
   viewport: 'width=device-width, initial-scale=1',
 };
 

@@ -88,13 +88,13 @@ const RegisterPage = () => {
         <div className="text-center">
           <Link href="/" className="inline-flex items-center space-x-2 mb-6">
             <Target className="h-8 w-8 text-blue-600" />
-            <span className="text-2xl font-bold text-slate-900">TestMata</span>
+            <span className="text-2xl font-bold text-slate-900">Masada</span>
           </Link>
           <h1 className="text-3xl font-bold text-slate-900 mb-2">
             Create Your Account
           </h1>
           <p className="text-slate-600">
-            Start your free trial today - no credit card required
+            Start testing with Ethiopian users today
           </p>
         </div>
 
@@ -105,7 +105,7 @@ const RegisterPage = () => {
               Sign Up
             </CardTitle>
             <CardDescription className="text-center text-slate-600">
-              Join thousands of teams using TestMata
+              Join Ethiopian companies using Masada
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -329,7 +329,7 @@ const RegisterPage = () => {
         {/* Footer */}
         <div className="text-center text-xs text-slate-500">
           <p>
-            ✓ 14-day free trial  •  ✓ No credit card required  •  ✓ Cancel anytime
+            ✓ No setup fees  •  ✓ Ethiopian user panel  •  ✓ Results in 24 hours
           </p>
         </div>
       </div>

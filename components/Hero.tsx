@@ -21,28 +21,28 @@ const Hero = () => {
             {/* Badge */}
             <div className="inline-flex items-center px-4 py-2 bg-blue-100 rounded-full text-blue-700 text-sm font-medium mb-8 animate-fade-in">
               <span className="w-2 h-2 bg-blue-500 rounded-full mr-2 animate-pulse"></span>
-              Trusted by 10,000+ companies worldwide
+              Trusted by Ethiopian tech companies
             </div>
 
             {/* Main Headline */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 mb-6 leading-tight">
-              Understand Your Users.
+              Test Your Apps with
               <span className="text-blue-600 block">
-                Improve Their Experience.
+                Real Ethiopian Users
               </span>
             </h1>
 
             {/* Subheading */}
             <p className="text-xl text-slate-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Get actionable insights from real user testing sessions. TestMata helps you identify usability issues, 
-              validate design decisions, and create better user experiences that drive results.
+              Get actionable insights from Ethiopian users to improve your web applications and websites. 
+              Masada helps you understand local user behavior and build products that resonate with your target market.
             </p>
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
               <Link href="/auth/register">
                 <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg group">
-                  Start Free Trial
+                  Start Testing Today
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
@@ -52,13 +52,13 @@ const Hero = () => {
                 className="px-8 py-3 text-lg border-slate-300 hover:bg-slate-50 group"
               >
                 <Play className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
-                Watch Demo
+                See How It Works
               </Button>
             </div>
 
             {/* Trust Indicators */}
             <div className="text-sm text-slate-500 mb-16">
-              ✓ No credit card required  •  ✓ 14-day free trial  •  ✓ Cancel anytime
+              ✓ No setup fees  •  ✓ Ethiopian user panel  •  ✓ Results in 24 hours
             </div>
           </div>
 
@@ -69,24 +69,24 @@ const Hero = () => {
                 <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-lg mx-auto mb-4">
                   <Users className="h-6 w-6 text-blue-600" />
                 </div>
-                <div className="text-3xl font-bold text-slate-900 mb-2">10,000+</div>
-                <div className="text-slate-600">Active Users</div>
+                <div className="text-3xl font-bold text-slate-900 mb-2">500+</div>
+                <div className="text-slate-600">Ethiopian Testers</div>
               </div>
               
               <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-sm hover:shadow-md transition-shadow">
                 <div className="flex items-center justify-center w-12 h-12 bg-sky-100 rounded-lg mx-auto mb-4">
                   <Target className="h-6 w-6 text-sky-600" />
                 </div>
-                <div className="text-3xl font-bold text-slate-900 mb-2">500K+</div>
-                <div className="text-slate-600">Tests Conducted</div>
+                <div className="text-3xl font-bold text-slate-900 mb-2">1,000+</div>
+                <div className="text-slate-600">Tests Completed</div>
               </div>
               
               <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-sm hover:shadow-md transition-shadow">
                 <div className="flex items-center justify-center w-12 h-12 bg-indigo-100 rounded-lg mx-auto mb-4">
                   <BarChart3 className="h-6 w-6 text-indigo-600" />
                 </div>
-                <div className="text-3xl font-bold text-slate-900 mb-2">94%</div>
-                <div className="text-slate-600">Success Rate</div>
+                <div className="text-3xl font-bold text-slate-900 mb-2">24hrs</div>
+                <div className="text-slate-600">Average Turnaround</div>
               </div>
             </div>
           </div>
