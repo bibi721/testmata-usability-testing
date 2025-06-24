@@ -5,6 +5,7 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: { unoptimized: true },
+  optimizeFonts: false,
   webpack: (config) => {
     config.cache = false;
     return config;
