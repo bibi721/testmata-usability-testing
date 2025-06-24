@@ -29,6 +29,15 @@ const TesterHeader = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, logout } = useAuth();
 
+  const handleMobileMenuClose = () => {
+    setIsMobileMenuOpen(false);
+  };
+
+  const handleLogout = () => {
+    logout();
+    setIsMobileMenuOpen(false);
+  };
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-slate-200 shadow-sm">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -158,34 +167,50 @@ const TesterHeader = () => {
         {isMobileMenuOpen && (
           <div className="lg:hidden border-t border-slate-200 bg-white">
             <div className="px-2 pt-2 pb-3 space-y-1">
-              <Link
-                href="/tester/dashboard"
-                className="block px-3 py-2 text-slate-700 hover:text-blue-600 hover:bg-slate-50 rounded-md transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
+              <button
+                onClick={handleMobileMenuClose}
+                className="w-full text-left"
               >
-                Dashboard
-              </Link>
-              <Link
-                href="/tester/dashboard?tab=available"
-                className="block px-3 py-2 text-slate-700 hover:text-blue-600 hover:bg-slate-50 rounded-md transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
+                <Link
+                  href="/tester/dashboard"
+                  className="block px-3 py-2 text-slate-700 hover:text-blue-600 hover:bg-slate-50 rounded-md transition-colors"
+                >
+                  Dashboard
+                </Link>
+              </button>
+              <button
+                onClick={handleMobileMenuClose}
+                className="w-full text-left"
               >
-                Available Tests
-              </Link>
-              <Link
-                href="/tester/dashboard?tab=earnings"
-                className="block px-3 py-2 text-slate-700 hover:text-blue-600 hover:bg-slate-50 rounded-md transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
+                <Link
+                  href="/tester/dashboard?tab=available"
+                  className="block px-3 py-2 text-slate-700 hover:text-blue-600 hover:bg-slate-50 rounded-md transition-colors"
+                >
+                  Available Tests
+                </Link>
+              </button>
+              <button
+                onClick={handleMobileMenuClose}
+                className="w-full text-left"
               >
-                Earnings
-              </Link>
-              <Link
-                href="/tester/help"
-                className="block px-3 py-2 text-slate-700 hover:text-blue-600 hover:bg-slate-50 rounded-md transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
+                <Link
+                  href="/tester/dashboard?tab=earnings"
+                  className="block px-3 py-2 text-slate-700 hover:text-blue-600 hover:bg-slate-50 rounded-md transition-colors"
+                >
+                  Earnings
+                </Link>
+              </button>
+              <button
+                onClick={handleMobileMenuClose}
+                className="w-full text-left"
               >
-                Help
-              </Link>
+                <Link
+                  href="/tester/help"
+                  className="block px-3 py-2 text-slate-700 hover:text-blue-600 hover:bg-slate-50 rounded-md transition-colors"
+                >
+                  Help
+                </Link>
+              </button>
               {user ? (
                 <>
                   <div className="border-t border-slate-200 pt-2 mt-2">
@@ -194,18 +219,19 @@ const TesterHeader = () => {
                       <p className="text-sm text-slate-500">{user.email}</p>
                     </div>
                   </div>
-                  <Link
-                    href="/tester/profile"
-                    className="block px-3 py-2 text-slate-700 hover:text-blue-600 hover:bg-slate-50 rounded-md transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Profile Settings
-                  </Link>
                   <button
-                    onClick={() => {
-                      logout();
-                      setIsMobileMenuOpen(false);
-                    }}
+                    onClick={handleMobileMenuClose}
+                    className="w-full text-left"
+                  >
+                    <Link
+                      href="/tester/profile"
+                      className="block px-3 py-2 text-slate-700 hover:text-blue-600 hover:bg-slate-50 rounded-md transition-colors"
+                    >
+                      Profile Settings
+                    </Link>
+                  </button>
+                  <button
+                    onClick={handleLogout}
                     className="block w-full text-left px-3 py-2 text-slate-700 hover:text-blue-600 hover:bg-slate-50 rounded-md transition-colors"
                   >
                     Sign Out
@@ -213,20 +239,28 @@ const TesterHeader = () => {
                 </>
               ) : (
                 <>
-                  <Link
-                    href="/auth/login"
-                    className="block px-3 py-2 text-slate-700 hover:text-blue-600 hover:bg-slate-50 rounded-md transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
+                  <button
+                    onClick={handleMobileMenuClose}
+                    className="w-full text-left"
                   >
-                    Sign In
-                  </Link>
-                  <Link
-                    href="/tester/signup"
-                    className="block px-3 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    <Link
+                      href="/auth/login"
+                      className="block px-3 py-2 text-slate-700 hover:text-blue-600 hover:bg-slate-50 rounded-md transition-colors"
+                    >
+                      Sign In
+                    </Link>
+                  </button>
+                  <button
+                    onClick={handleMobileMenuClose}
+                    className="w-full text-left"
                   >
-                    Become a Tester
-                  </Link>
+                    <Link
+                      href="/tester/signup"
+                      className="block px-3 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors"
+                    >
+                      Become a Tester
+                    </Link>
+                  </button>
                 </>
               )}
             </div>

@@ -50,6 +50,15 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const handleMobileMenuClose = () => {
+    setIsMobileMenuOpen(false);
+  };
+
+  const handleLogout = () => {
+    logout();
+    setIsMobileMenuOpen(false);
+  };
+
   const features = [
     {
       title: "Ethiopian User Testing",
@@ -270,53 +279,77 @@ const Header = () => {
             <div className="px-2 pt-2 pb-3 space-y-1">
               {!isDashboard && (
                 <>
-                  <Link
-                    href="/product"
-                    className="block px-3 py-2 text-slate-700 hover:text-blue-600 hover:bg-slate-50 rounded-md transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
+                  <button
+                    onClick={handleMobileMenuClose}
+                    className="w-full text-left"
                   >
-                    Product
-                  </Link>
-                  <Link
-                    href="/pricing"
-                    className="block px-3 py-2 text-slate-700 hover:text-blue-600 hover:bg-slate-50 rounded-md transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    <Link
+                      href="/product"
+                      className="block px-3 py-2 text-slate-700 hover:text-blue-600 hover:bg-slate-50 rounded-md transition-colors"
+                    >
+                      Product
+                    </Link>
+                  </button>
+                  <button
+                    onClick={handleMobileMenuClose}
+                    className="w-full text-left"
                   >
-                    Pricing
-                  </Link>
+                    <Link
+                      href="/pricing"
+                      className="block px-3 py-2 text-slate-700 hover:text-blue-600 hover:bg-slate-50 rounded-md transition-colors"
+                    >
+                      Pricing
+                    </Link>
+                  </button>
                 </>
               )}
               
               {isDashboard && user && (
                 <>
-                  <Link
-                    href="/dashboard"
-                    className="block px-3 py-2 text-slate-700 hover:text-blue-600 hover:bg-slate-50 rounded-md transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
+                  <button
+                    onClick={handleMobileMenuClose}
+                    className="w-full text-left"
                   >
-                    Overview
-                  </Link>
-                  <Link
-                    href="/dashboard/tests"
-                    className="block px-3 py-2 text-slate-700 hover:text-blue-600 hover:bg-slate-50 rounded-md transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    <Link
+                      href="/dashboard"
+                      className="block px-3 py-2 text-slate-700 hover:text-blue-600 hover:bg-slate-50 rounded-md transition-colors"
+                    >
+                      Overview
+                    </Link>
+                  </button>
+                  <button
+                    onClick={handleMobileMenuClose}
+                    className="w-full text-left"
                   >
-                    Tests
-                  </Link>
-                  <Link
-                    href="/dashboard/analytics"
-                    className="block px-3 py-2 text-slate-700 hover:text-blue-600 hover:bg-slate-50 rounded-md transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    <Link
+                      href="/dashboard/tests"
+                      className="block px-3 py-2 text-slate-700 hover:text-blue-600 hover:bg-slate-50 rounded-md transition-colors"
+                    >
+                      Tests
+                    </Link>
+                  </button>
+                  <button
+                    onClick={handleMobileMenuClose}
+                    className="w-full text-left"
                   >
-                    Analytics
-                  </Link>
-                  <Link
-                    href="/dashboard/testers"
-                    className="block px-3 py-2 text-slate-700 hover:text-blue-600 hover:bg-slate-50 rounded-md transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    <Link
+                      href="/dashboard/analytics"
+                      className="block px-3 py-2 text-slate-700 hover:text-blue-600 hover:bg-slate-50 rounded-md transition-colors"
+                    >
+                      Analytics
+                    </Link>
+                  </button>
+                  <button
+                    onClick={handleMobileMenuClose}
+                    className="w-full text-left"
                   >
-                    Testers
-                  </Link>
+                    <Link
+                      href="/dashboard/testers"
+                      className="block px-3 py-2 text-slate-700 hover:text-blue-600 hover:bg-slate-50 rounded-md transition-colors"
+                    >
+                      Testers
+                    </Link>
+                  </button>
                 </>
               )}
 
@@ -329,10 +362,7 @@ const Header = () => {
                     </div>
                   </div>
                   <button
-                    onClick={() => {
-                      logout();
-                      setIsMobileMenuOpen(false);
-                    }}
+                    onClick={handleLogout}
                     className="block w-full text-left px-3 py-2 text-slate-700 hover:text-blue-600 hover:bg-slate-50 rounded-md transition-colors"
                   >
                     Sign Out
@@ -340,20 +370,28 @@ const Header = () => {
                 </>
               ) : (
                 <>
-                  <Link
-                    href="/auth/login"
-                    className="block px-3 py-2 text-slate-700 hover:text-blue-600 hover:bg-slate-50 rounded-md transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
+                  <button
+                    onClick={handleMobileMenuClose}
+                    className="w-full text-left"
                   >
-                    Sign In
-                  </Link>
-                  <Link
-                    href="/auth/register"
-                    className="block px-3 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    <Link
+                      href="/auth/login"
+                      className="block px-3 py-2 text-slate-700 hover:text-blue-600 hover:bg-slate-50 rounded-md transition-colors"
+                    >
+                      Sign In
+                    </Link>
+                  </button>
+                  <button
+                    onClick={handleMobileMenuClose}
+                    className="w-full text-left"
                   >
-                    Start Testing
-                  </Link>
+                    <Link
+                      href="/auth/register"
+                      className="block px-3 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors"
+                    >
+                      Start Testing
+                    </Link>
+                  </button>
                 </>
               )}
             </div>
