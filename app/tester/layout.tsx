@@ -1,7 +1,6 @@
 import '../globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { AuthProvider } from '@/contexts/AuthContext';
 import TesterHeader from '@/components/TesterHeader';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -20,17 +19,11 @@ export default function TesterLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="scroll-smooth">
-      <body className={inter.className}>
-        <AuthProvider>
-          <div className="min-h-screen flex flex-col">
-            <TesterHeader />
-            <main className="flex-1">
-              {children}
-            </main>
-          </div>
-        </AuthProvider>
-      </body>
-    </html>
+    <div className="min-h-screen flex flex-col">
+      <TesterHeader />
+      <main className="flex-1">
+        {children}
+      </main>
+    </div>
   );
 }
