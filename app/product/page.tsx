@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -106,6 +107,20 @@ const ProductPage = () => {
     }
   ];
 
+  const handleStartTesting = () => {
+    window.location.href = '/auth/register';
+  };
+
+  const handleScheduleDemo = () => {
+    // In a real app, this would open a calendar booking widget
+    alert('Demo scheduling feature coming soon! Please contact us at hello@masada.et');
+  };
+
+  const handleWatchDemo = () => {
+    // In a real app, this would open a video modal
+    alert('Video demo coming soon! Sign up to get notified when it\'s available.');
+  };
+
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
@@ -126,7 +141,11 @@ const ProductPage = () => {
               Understand local preferences, cultural nuances, and user behavior patterns.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg">
+              <Button 
+                size="lg" 
+                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg"
+                onClick={handleStartTesting}
+              >
                 Start Testing Today
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
@@ -134,6 +153,7 @@ const ProductPage = () => {
                 size="lg" 
                 variant="outline" 
                 className="px-8 py-3 text-lg border-slate-300 hover:bg-slate-50 group"
+                onClick={handleWatchDemo}
               >
                 <Play className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
                 See How It Works
@@ -144,7 +164,7 @@ const ProductPage = () => {
       </section>
 
       {/* Interactive Feature Showcase */}
-      <section className="py-20">
+      <section className="py-20" id="features">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">
@@ -350,7 +370,7 @@ const ProductPage = () => {
       </section>
 
       {/* Use Cases */}
-      <section className="py-20 bg-slate-50">
+      <section className="py-20 bg-slate-50" id="use-cases">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">
@@ -420,7 +440,10 @@ const ProductPage = () => {
                       </div>
                     ))}
                   </div>
-                  <Button className="mt-6 bg-blue-600 hover:bg-blue-700 text-white">
+                  <Button 
+                    className="mt-6 bg-blue-600 hover:bg-blue-700 text-white"
+                    onClick={handleStartTesting}
+                  >
                     Start Similar Testing
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
@@ -443,11 +466,20 @@ const ProductPage = () => {
               Start testing with real Ethiopian users today.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-white text-blue-600 hover:bg-slate-100 px-8 py-3 text-lg">
+              <Button 
+                size="lg" 
+                className="bg-white text-blue-600 hover:bg-slate-100 px-8 py-3 text-lg"
+                onClick={handleStartTesting}
+              >
                 Start Testing Now
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 px-8 py-3 text-lg">
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="border-white text-white hover:bg-white hover:text-blue-600 px-8 py-3 text-lg"
+                onClick={handleScheduleDemo}
+              >
                 Schedule Demo
               </Button>
             </div>

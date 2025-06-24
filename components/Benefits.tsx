@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import Link from 'next/link';
 import { CheckCircle, TrendingUp, Users, Clock, Shield, Lightbulb } from 'lucide-react';
 
 const Benefits = () => {
@@ -14,7 +15,8 @@ const Benefits = () => {
         "40% improvement in user engagement",
         "25% higher conversion rates", 
         "60% faster product-market fit"
-      ]
+      ],
+      learnMoreLink: "/product#market-success"
     },
     {
       icon: Users,
@@ -25,7 +27,8 @@ const Benefits = () => {
         "500+ verified Ethiopian testers",
         "Multiple regions represented",
         "Feedback in Amharic and English"
-      ]
+      ],
+      learnMoreLink: "/product#user-insights"
     },
     {
       icon: Clock,
@@ -36,7 +39,8 @@ const Benefits = () => {
         "24-hour turnaround time",
         "50% reduction in development cycles",
         "Affordable pricing for local market"
-      ]
+      ],
+      learnMoreLink: "/pricing"
     }
   ];
 
@@ -86,12 +90,14 @@ const Benefits = () => {
                 </div>
 
                 <div className="pt-4">
-                  <button className="inline-flex items-center text-blue-600 hover:text-blue-700 font-semibold group">
-                    Learn more about this feature
-                    <svg className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </button>
+                  <Link href={benefit.learnMoreLink}>
+                    <button className="inline-flex items-center text-blue-600 hover:text-blue-700 font-semibold group transition-colors">
+                      Learn more about this feature
+                      <svg className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+                  </Link>
                 </div>
               </div>
 
@@ -124,12 +130,16 @@ const Benefits = () => {
               Start testing with real Ethiopian users today.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors">
-                Start Testing Now
-              </button>
-              <button className="border border-slate-300 hover:bg-slate-50 text-slate-700 px-8 py-3 rounded-lg font-semibold transition-colors">
-                Schedule Demo
-              </button>
+              <Link href="/auth/register">
+                <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors">
+                  Start Testing Now
+                </button>
+              </Link>
+              <Link href="/product">
+                <button className="border border-slate-300 hover:bg-slate-50 text-slate-700 px-8 py-3 rounded-lg font-semibold transition-colors">
+                  Schedule Demo
+                </button>
+              </Link>
             </div>
           </div>
         </div>

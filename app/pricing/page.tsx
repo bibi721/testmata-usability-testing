@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -19,6 +21,7 @@ import {
 
 const PricingPage = () => {
   const [isYearly, setIsYearly] = useState(false);
+  const router = useRouter();
 
   const plans = [
     {
@@ -125,6 +128,26 @@ const PricingPage = () => {
     }
   ];
 
+  const handlePlanSelect = (planName: string) => {
+    if (planName === "Enterprise") {
+      // In a real app, this would open a contact form or redirect to a contact page
+      alert('Enterprise plan inquiry! Please contact us at sales@masada.et for custom pricing and features.');
+    } else {
+      // Redirect to registration with plan parameter
+      router.push(`/auth/register?plan=${planName.toLowerCase()}`);
+    }
+  };
+
+  const handleContactSupport = () => {
+    // In a real app, this would open a support chat or contact form
+    alert('Support contact! Please reach out to us at support@masada.et or call +251-11-XXX-XXXX');
+  };
+
+  const handleScheduleDemo = () => {
+    // In a real app, this would open a calendar booking widget
+    alert('Demo scheduling! Please contact us at demo@masada.et to schedule a personalized demo.');
+  };
+
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
@@ -222,6 +245,7 @@ const PricingPage = () => {
                         ? 'bg-blue-600 hover:bg-blue-700 text-white' 
                         : 'bg-slate-900 hover:bg-slate-800 text-white'
                     }`}
+                    onClick={() => handlePlanSelect(plan.name)}
                   >
                     {plan.cta}
                     {plan.cta !== "Contact Sales" && <ArrowRight className="ml-2 h-4 w-4" />}
@@ -292,7 +316,11 @@ const PricingPage = () => {
 
           <div className="text-center mt-12">
             <p className="text-slate-600 mb-4">Still have questions?</p>
-            <Button variant="outline" className="border-slate-300 hover:bg-slate-100">
+            <Button 
+              variant="outline" 
+              className="border-slate-300 hover:bg-slate-100"
+              onClick={handleContactSupport}
+            >
               <HeadphonesIcon className="mr-2 h-4 w-4" />
               Contact Support
             </Button>
@@ -312,11 +340,20 @@ const PricingPage = () => {
               No setup fees, no long-term commitments.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-white text-blue-600 hover:bg-slate-100 px-8 py-3 text-lg">
+              <Button 
+                size="lg" 
+                className="bg-white text-blue-600 hover:bg-slate-100 px-8 py-3 text-lg"
+                onClick={() => router.push('/auth/register')}
+              >
                 Start Free Trial
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 px-8 py-3 text-lg">
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="border-white text-white hover:bg-white hover:text-blue-600 px-8 py-3 text-lg"
+                onClick={handleScheduleDemo}
+              >
                 Schedule Demo Call
               </Button>
             </div>

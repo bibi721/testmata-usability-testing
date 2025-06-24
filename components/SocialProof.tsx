@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { Star, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -9,12 +10,12 @@ const SocialProof = () => {
 
   // Ethiopian tech companies and testimonials
   const companies = [
-    { name: "Ride", logo: "🚗" },
-    { name: "Deliver Addis", logo: "🛵" },
-    { name: "Gebeya", logo: "💼" },
-    { name: "iCog Labs", logo: "🤖" },
-    { name: "Kazana", logo: "💳" },
-    { name: "Sheba Platform", logo: "🏪" }
+    { name: "Ride", logo: "🚗", link: "#" },
+    { name: "Deliver Addis", logo: "🛵", link: "#" },
+    { name: "Gebeya", logo: "💼", link: "#" },
+    { name: "iCog Labs", logo: "🤖", link: "#" },
+    { name: "Kazana", logo: "💳", link: "#" },
+    { name: "Sheba Platform", logo: "🏪", link: "#" }
   ];
 
   const testimonials = [
@@ -52,6 +53,15 @@ const SocialProof = () => {
     setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
 
+  const handleCompanyClick = (company: any) => {
+    // In a real app, this would link to case studies or company pages
+    alert(`Learn more about how ${company.name} uses Masada for Ethiopian user testing!`);
+  };
+
+  const handleGetStarted = () => {
+    window.location.href = '/auth/register';
+  };
+
   return (
     <section className="py-20 bg-slate-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -62,15 +72,16 @@ const SocialProof = () => {
           </p>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center opacity-60">
             {companies.map((company, index) => (
-              <div
+              <button
                 key={company.name}
-                className="flex items-center justify-center h-12 grayscale hover:grayscale-0 transition-all duration-300 hover:scale-110"
+                onClick={() => handleCompanyClick(company)}
+                className="flex items-center justify-center h-12 grayscale hover:grayscale-0 transition-all duration-300 hover:scale-110 cursor-pointer"
               >
                 <div className="flex items-center space-x-2">
                   <span className="text-2xl">{company.logo}</span>
                   <div className="text-sm font-semibold text-slate-600">{company.name}</div>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         </div>
@@ -167,6 +178,29 @@ const SocialProof = () => {
           <div>
             <div className="text-4xl font-bold text-blue-600 mb-2">500+</div>
             <div className="text-slate-600">Ethiopian Testers</div>
+          </div>
+        </div>
+
+        {/* CTA */}
+        <div className="text-center mt-16">
+          <h3 className="text-2xl font-bold text-slate-900 mb-4">
+            Ready to Join These Success Stories?
+          </h3>
+          <p className="text-slate-600 mb-6 max-w-2xl mx-auto">
+            Start testing with Ethiopian users today and see how local insights can transform your product.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button 
+              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3"
+              onClick={handleGetStarted}
+            >
+              Start Free Trial
+            </Button>
+            <Link href="/product">
+              <Button variant="outline" className="border-slate-300 hover:bg-slate-100 px-8 py-3">
+                See How It Works
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
