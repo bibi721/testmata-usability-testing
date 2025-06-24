@@ -70,7 +70,7 @@ const ProductPage = () => {
       title: "Global Test Panel",
       description: "Access to 100,000+ diverse users across 50+ countries",
       highlight: "Demographic Targeting",
-      demo = "panel"
+      demo: "panel"
     }
   ];
 
