@@ -46,14 +46,16 @@ const Hero = () => {
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="px-8 py-3 text-lg border-slate-300 hover:bg-slate-50 group"
-              >
-                <Play className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
-                See How It Works
-              </Button>
+              <Link href="/tester/signup">
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="px-8 py-3 text-lg border-slate-300 hover:bg-slate-50 group"
+                >
+                  <Play className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
+                  Become a Tester
+                </Button>
+              </Link>
             </div>
 
             {/* Trust Indicators */}
