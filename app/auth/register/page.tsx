@@ -69,7 +69,7 @@ const RegisterPage = () => {
     }
 
     try {
-      await register(formData.email, formData.password, formData.name);
+      await register(formData.email, formData.password, formData.name, 'customer');
       router.push('/dashboard');
     } catch (err) {
       setError('Registration failed. Please try again.');
@@ -102,7 +102,7 @@ const RegisterPage = () => {
         <Card className="border-slate-200 shadow-lg">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl font-semibold text-center text-slate-900">
-              Sign Up
+              Sign Up for Customer Account
             </CardTitle>
             <CardDescription className="text-center text-slate-600">
               Join Ethiopian companies using Masada
@@ -306,7 +306,7 @@ const RegisterPage = () => {
                     Creating account...
                   </>
                 ) : (
-                  'Create Account'
+                  'Create Customer Account'
                 )}
               </Button>
             </form>
@@ -320,6 +320,15 @@ const RegisterPage = () => {
                   className="text-blue-600 hover:text-blue-500 font-medium"
                 >
                   Sign in
+                </Link>
+              </p>
+              <p className="text-sm text-slate-600 mt-2">
+                Want to earn money as a tester?{' '}
+                <Link
+                  href="/tester/signup"
+                  className="text-blue-600 hover:text-blue-500 font-medium"
+                >
+                  Become a tester
                 </Link>
               </p>
             </div>

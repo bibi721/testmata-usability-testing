@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -32,6 +34,8 @@ const TesterSignupPage = () => {
   });
   const [error, setError] = useState('');
   const [currentStep, setCurrentStep] = useState(1);
+  const { register } = useAuth();
+  const router = useRouter();
 
   const benefits = [
     {
@@ -90,9 +94,13 @@ const TesterSignupPage = () => {
       return;
     }
 
-    // Simulate API call
-    console.log('Tester signup data:', formData);
-    // Redirect to qualification test or success page
+    try {
+      const fullName = `${formData.firstName} ${formData.lastName}`;
+      await register(formData.email, 'defaultPassword123', fullName, 'tester');
+      router.push('/tester');
+    } catch (err) {
+      setError('Registration failed. Please try again.');
+    }
   };
 
   const nextStep = () => {

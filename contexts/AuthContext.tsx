@@ -7,14 +7,23 @@ interface User {
   email: string;
   name: string;
   avatar?: string;
-  plan: 'free' | 'starter' | 'professional' | 'enterprise';
+  userType: 'customer' | 'tester';
+  plan?: 'free' | 'starter' | 'professional' | 'enterprise';
+  // Tester specific fields
+  rating?: number;
+  completedTests?: number;
+  earnings?: number;
+  level?: string;
+  // Customer specific fields
+  company?: string;
+  testsCreated?: number;
 }
 
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, name: string) => Promise<void>;
+  register: (email: string, password: string, name: string, userType?: 'customer' | 'tester') => Promise<void>;
   logout: () => void;
   updateUser: (userData: Partial<User>) => void;
 }
@@ -39,11 +48,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1500));
     
+    // Determine user type based on email domain or other logic
+    // For demo purposes, we'll use a simple check
+    const userType: 'customer' | 'tester' = email.includes('tester') || email.includes('test') ? 'tester' : 'customer';
+    
     const mockUser: User = {
       id: '1',
       email,
       name: email.split('@')[0],
-      plan: 'free'
+      userType,
+      ...(userType === 'customer' ? {
+        plan: 'free' as const,
+        company: 'Demo Company',
+        testsCreated: 0
+      } : {
+        rating: 4.8,
+        completedTests: 12,
+        earnings: 340,
+        level: 'Rising Tester'
+      })
     };
     
     setUser(mockUser);
@@ -51,7 +74,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(false);
   };
 
-  const register = async (email: string, password: string, name: string) => {
+  const register = async (email: string, password: string, name: string, userType: 'customer' | 'tester' = 'customer') => {
     setIsLoading(true);
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1500));
@@ -60,7 +83,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       id: '1',
       email,
       name,
-      plan: 'free'
+      userType,
+      ...(userType === 'customer' ? {
+        plan: 'free' as const,
+        company: name + "'s Company",
+        testsCreated: 0
+      } : {
+        rating: 0,
+        completedTests: 0,
+        earnings: 0,
+        level: 'New Tester'
+      })
     };
     
     setUser(mockUser);
