@@ -40,21 +40,52 @@ async function main() {
 
   // Check for required files
   console.log('1. Checking required files...');
-  checkFile('.env.local', 'Environment file (.env.local)');
+  
+  // Check if .env.local exists, if not copy from example
+  if (!fs.existsSync('.env.local')) {
+    if (fs.existsSync('.env.local.example')) {
+      console.log('⚠️ .env.local not found, creating from example...');
+      fs.copyFileSync('.env.local.example', '.env.local');
+      console.log('✅ Created .env.local from example');
+    } else {
+      console.error('❌ .env.local and .env.local.example not found');
+      console.error('Please create .env.local with your database configuration');
+      process.exit(1);
+    }
+  } else {
+    console.log('✅ Environment file (.env.local) found');
+  }
+  
   checkFile('prisma/schema.prisma', 'Prisma schema');
   console.log('');
 
-  // Install dependencies
-  console.log('2. Installing dependencies...');
-  runCommand('npm install', 'Installing Node.js dependencies');
-
-  // Install Prisma if not already installed
-  console.log('3. Setting up Prisma...');
+  // Check if Docker is installed
+  console.log('2. Checking Docker installation...');
   try {
-    runCommand('npx prisma --version', 'Checking Prisma installation');
+    execSync('docker --version', { stdio: 'pipe' });
+    console.log('✅ Docker is installed');
+    
+    // Check if Docker is running
+    execSync('docker info', { stdio: 'pipe' });
+    console.log('✅ Docker is running');
+    
+    // Ask if user wants to start PostgreSQL with Docker
+    console.log('\nDo you want to start PostgreSQL with Docker? (y/n)');
+    const startDocker = process.stdin.read(1)?.toString().toLowerCase() === 'y';
+    
+    if (startDocker) {
+      console.log('3. Starting PostgreSQL with Docker...');
+      runCommand('docker-compose up -d', 'Starting PostgreSQL container');
+    }
   } catch (error) {
-    runCommand('npm install prisma @prisma/client', 'Installing Prisma');
+    console.log('⚠️ Docker not available or not running');
+    console.log('Please ensure your PostgreSQL database is running manually');
   }
+  console.log('');
+
+  // Install dependencies
+  console.log('3. Installing dependencies...');
+  runCommand('npm install', 'Installing Node.js dependencies');
 
   // Generate Prisma client
   console.log('4. Generating Prisma client...');
@@ -64,50 +95,13 @@ async function main() {
   console.log('5. Setting up database schema...');
   runCommand('npx prisma db push', 'Pushing database schema');
 
-  // Test database connection
-  console.log('6. Testing database connection...');
-  console.log('Starting Next.js development server to test database...');
-  
-  // Start the dev server in the background and test the API
-  const { spawn } = require('child_process');
-  const server = spawn('npm', ['run', 'dev'], { 
-    stdio: ['ignore', 'pipe', 'pipe'],
-    detached: false 
-  });
-
-  // Wait for server to start
-  await new Promise((resolve) => {
-    server.stdout.on('data', (data) => {
-      if (data.toString().includes('Ready')) {
-        resolve();
-      }
-    });
-    
-    // Fallback timeout
-    setTimeout(resolve, 10000);
-  });
-
-  // Test the database API endpoint
+  // Seed the database
+  console.log('6. Seeding database with sample data...');
   try {
-    const fetch = require('node-fetch');
-    const response = await fetch('http://localhost:3000/api/test-db');
-    const result = await response.json();
-    
-    if (result.status === 'success') {
-      console.log('✅ Database connection test passed!');
-      console.log(`📊 User count: ${result.data.userCount}`);
-      console.log(`🕐 Ethiopian time: ${result.data.ethiopianTime}`);
-    } else {
-      console.log('⚠️  Database connection test failed');
-      console.log('Error:', result.message);
-    }
+    runCommand('node prisma/seed.js', 'Seeding database');
   } catch (error) {
-    console.log('⚠️  Could not test database connection automatically');
-    console.log('Please visit http://localhost:3000/api/test-db manually to test');
+    console.log('⚠️ Database seeding failed. You can try again later with: node prisma/seed.js');
   }
-
-  // Kill the server
-  server.kill();
 
   console.log('\n🎉 Database setup completed successfully!');
   console.log('🚀 Your Masada Next.js app is ready for Ethiopian usability testing!');
@@ -116,10 +110,6 @@ async function main() {
   console.log('2. Visit http://localhost:3000/api/test-db to test database');
   console.log('3. Open Prisma Studio: npx prisma studio');
   console.log('4. Start building your Ethiopian usability testing platform!');
-  console.log('\n🌍 Database configured for Ethiopian market:');
-  console.log('   • Timezone: Africa/Addis_Ababa');
-  console.log('   • Currency: ETB');
-  console.log('   • Languages: Amharic, English');
 }
 
 main().catch(error => {

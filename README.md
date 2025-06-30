@@ -1,10 +1,6 @@
-# Masada
+# Masada - Ethiopian Usability Testing Platform
 
-Ethiopian usability testing platform connecting businesses with local users.
-
-## Overview
-
-Masada helps Ethiopian tech companies test their applications with real Ethiopian users. Get feedback in Amharic and English, understand local user behavior, and improve your products for the Ethiopian market.
+A comprehensive platform connecting Ethiopian businesses with local users for usability testing.
 
 ## Features
 
@@ -18,22 +14,59 @@ Masada helps Ethiopian tech companies test their applications with real Ethiopia
 
 - Next.js 13 (App Router)
 - TypeScript
+- PostgreSQL Database
+- Prisma ORM
+- NextAuth.js
 - Tailwind CSS
 - shadcn/ui
 
-## Quick Start
+## Getting Started
+
+### Database Setup
+
+1. **Copy environment variables**:
+   ```bash
+   cp .env.local.example .env.local
+   ```
+
+2. **Start PostgreSQL with Docker**:
+   ```bash
+   docker-compose up -d
+   ```
+
+3. **Run database setup script**:
+   ```bash
+   npm run db:setup
+   ```
+
+### Development
 
 ```bash
-# Clone and install
-git clone https://github.com/your-username/masada.git
-cd masada
+# Install dependencies
 npm install
 
-# Start development
+# Generate Prisma client
+npm run db:generate
+
+# Start development server
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000)
+### Database Commands
+
+```bash
+# Generate Prisma client
+npm run db:generate
+
+# Push schema to database
+npm run db:push
+
+# Open Prisma Studio
+npm run db:studio
+
+# Seed database with sample data
+npm run db:seed
+```
 
 ## Project Structure
 
@@ -41,16 +74,27 @@ Open [http://localhost:3000](http://localhost:3000)
 app/           # Next.js pages
 components/    # React components
 contexts/      # Auth & state management
-lib/           # Utilities
+lib/           # Utilities and database client
+prisma/        # Database schema and migrations
+public/        # Static assets
 ```
 
-## Scripts
+## Database Schema
 
-```bash
-npm run dev    # Development server
-npm run build  # Production build
-npm run start  # Production server
-```
+The database includes models for:
+- Users (Customers, Testers, Admins)
+- Tests and Test Sessions
+- Payments and Earnings
+- Notifications
+- Analytics
+
+## Ethiopian-Specific Features
+
+- Timezone: Africa/Addis_Ababa
+- Currency: ETB
+- Languages: Amharic & English
+- Phone validation: Ethiopian phone numbers
+- Regional data: All Ethiopian regions
 
 ## License
 
