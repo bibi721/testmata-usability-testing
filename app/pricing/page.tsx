@@ -228,7 +228,7 @@ const PricingPage = () => {
                     </div>
                     {typeof plan.price.monthly === 'number' && isYearly && (
                       <p className="text-sm text-slate-500">
-                        Billed annually (${plan.price.yearly * 12}/year)
+                        Billed annually (${(plan.price.yearly as number) * 12}/year)
                       </p>
                     )}
                   </div>
