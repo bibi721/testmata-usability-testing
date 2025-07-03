@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "NEXT_SWC_BINARY_PATH=./node_modules/@next/swc-wasm-nodejs/wasm.js next dev",
-    "build": "NEXT_SWC_BINARY_PATH=./node_modules/@next/swc-wasm-nodejs/wasm.js next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "db:generate": "prisma generate",
