@@ -15,8 +15,25 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Target, CheckCircle, DollarSign, Clock, Users, Star, AlertTriangle, Loader2, Check, X } from 'lucide-react';
 
+interface FormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  city: string;
+  age: string;
+  education: string;
+  occupation: string;
+  experience: string;
+  languages: string[];
+  devices: string[];
+  internetSpeed: string;
+  availability: string;
+  motivation: string;
+}
+
 const TesterSignupPage = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     firstName: '',
     lastName: '',
     email: '',
@@ -78,7 +95,7 @@ const TesterSignupPage = () => {
     }
   };
 
-  const handleArrayChange = (field: string, value: string, checked: boolean) => {
+  const handleArrayChange = (field: keyof Pick<FormData, 'languages' | 'devices'>, value: string, checked: boolean) => {
     setFormData(prev => ({
       ...prev,
       [field]: checked 
@@ -111,7 +128,7 @@ const TesterSignupPage = () => {
 
     // Basic validation
     const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'city'];
-    const missingFields = requiredFields.filter(field => !formData[field]);
+    const missingFields = requiredFields.filter(field => !formData[field as keyof FormData]);
     
     if (missingFields.length > 0) {
       setError('Please fill in all required fields');
@@ -392,7 +409,7 @@ const TesterSignupPage = () => {
                                 id={language}
                                 checked={formData.languages.includes(language)}
                                 onCheckedChange={(checked) => 
-                                  handleArrayChange('languages', language, checked)
+                                  handleArrayChange('languages', language, checked as boolean)
                                 }
                               />
                               <Label htmlFor={language}>{language}</Label>
@@ -417,7 +434,7 @@ const TesterSignupPage = () => {
                                 id={device}
                                 checked={formData.devices.includes(device)}
                                 onCheckedChange={(checked) => 
-                                  handleArrayChange('devices', device, checked)
+                                  handleArrayChange('devices', device, checked as boolean)
                                 }
                               />
                               <Label htmlFor={device}>{device}</Label>
