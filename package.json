@@ -10,8 +10,8 @@
     "generate": "prisma generate",
     "migrate": "prisma migrate dev",
     "studio": "prisma studio",
-    "seed": "node prisma/seed.js",
-    "setup-db": "node scripts/setup-database.js"
+    "seed": "node prisma/seed.ts",
+    "setup-db": "node scripts/setup-database.ts"
   },
    "prisma": {
     "seed": "ts-node prisma/seed.ts"
