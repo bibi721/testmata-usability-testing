@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "NEXT_SWC_BINARY_PATH=./node_modules/@next/swc-wasm-nodejs/wasm.js next dev",
+    "dev": "cross-env NEXT_SWC_BINARY_PATH=./node_modules/@next/swc-wasm-nodejs/wasm.js next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -78,6 +78,7 @@
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "24.0.10",
     "@types/react": "19.1.8",
+    "cross-env": "^7.0.3",
     "prisma": "^5.7.1",
     "typescript": "5.8.3"
   }
