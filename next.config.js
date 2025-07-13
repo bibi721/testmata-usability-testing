@@ -6,11 +6,7 @@ const nextConfig = {
   },
   images: { unoptimized: true },
   optimizeFonts: true,
-  experimental: {
-    fontLoaders: [
-      { loader: '@next/font/google', options: { subsets: ['latin'] } },
-    ],
-  },
+     reactStrictMode: true,
   webpack: (config) => {
     config.cache = false;
     config.watchOptions = {
