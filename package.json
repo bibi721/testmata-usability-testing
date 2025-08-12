@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test": "jest",
     "generate": "prisma generate",
     "migrate": "prisma migrate dev",
     "studio": "prisma studio",
@@ -80,6 +81,7 @@
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^24.0.13",
     "@types/react": "19.1.8",
+    "jest": "^30.0.5",
     "prisma": "^5.7.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
