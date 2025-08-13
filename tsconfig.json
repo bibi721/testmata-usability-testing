@@ -20,7 +20,8 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["backend/src/*"]
+      "@/*": ["./*"],                 // Now points to root so contexts/ & components/ work
+      "@backend/*": ["backend/src/*"] // Backend alias
     }
   },
   "include": [
