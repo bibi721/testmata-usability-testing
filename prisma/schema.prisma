@@ -3,9 +3,7 @@
 
 generator client {
  provider = "prisma-client-ts"
-  previewFeatures = ["clientExtensions"]
-  binaryTargets = ["native"]
-  // 👇 Add this if needed
+  output   = "../node_modules/.prisma/client"
   seed = "node prisma/seed.ts"
 }
 

@@ -1,12 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
   eslint: {
     ignoreDuringBuilds: true,
   },
   images: { unoptimized: true },
   optimizeFonts: true,
-     reactStrictMode: true,
+  reactStrictMode: true,
   webpack: (config) => {
     config.cache = false;
     config.watchOptions = {

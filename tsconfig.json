@@ -14,22 +14,21 @@
     "jsx": "preserve",
     "incremental": true,
     "plugins": [
-      {
-        "name": "next"
-      }
+      { "name": "next" }
     ],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"],                 // Now points to root so contexts/ & components/ work
-      "@backend/*": ["backend/src/*"] // Backend alias
+      "@/*": ["./*"]
     }
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts",
-    "backend/src/**/*"
+    ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "backend"           // <- exclude backend completely
+  ]
 }

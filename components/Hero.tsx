@@ -2,10 +2,10 @@
 
 import React from 'react';
 import Link from 'next/link';
+import StatCard from '@/components/common/StatCard';
 import { Button } from '@/components/ui/button';
 import { Play, ArrowRight, Users, Target, BarChart3, CheckCircle } from 'lucide-react';
 import { SectionContainer } from '@/components/ui/section-container';
-import { StatCard } from '@/components/common/StatCard';
 
 /**
  * Hero section component with call-to-action and key statistics

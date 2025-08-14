@@ -1,11 +1,11 @@
 import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { PrismaAdapter } from '@auth/prisma-adapter';
+import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
+  // adapter: PrismaAdapter(prisma), // Temporarily disabled due to Prisma client issues
   providers: [
     CredentialsProvider({
       name: 'credentials',
@@ -69,7 +69,7 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id;
         token.userType = user.userType;
         token.status = user.status;
-        token.emailVerified = user.emailVerified;
+        token.emailVerified = Boolean(user.emailVerified);
         
         if (user.userType === 'CUSTOMER') {
           token.plan = user.plan;

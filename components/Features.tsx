@@ -92,14 +92,13 @@ const Features: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {features.map((feature, index) => (
-          <FeatureCard
-            key={feature.title}
-            icon={feature.icon}
-            title={feature.title}
-            description={feature.description}
-            highlight={feature.highlight}
-            animationDelay={index * 100}
-          />
+       <FeatureCard
+       key={feature.title}
+  icon={<feature.icon />} // Render the icon component
+  title={feature.title}
+  description={feature.description}
+  highlight={feature.highlight}
+/>
         ))}
       </div>
 
