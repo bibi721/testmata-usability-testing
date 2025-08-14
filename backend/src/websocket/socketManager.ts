@@ -3,7 +3,7 @@
  * Real-time communication for test monitoring and notifications
  */
 
-import { Server as SocketIOServer } from 'socket.io';
+import { Server as SocketIOServer, Socket } from 'socket.io';
 import { Server as HTTPServer } from 'http';
 import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
@@ -83,7 +83,7 @@ export class SocketManager {
 
         next();
       } catch (error) {
-        logger.warn('WebSocket authentication failed', { error: error.message });
+        logger.warn('WebSocket authentication failed', { error: (error as any)?.message });
         next(new Error('Authentication failed'));
       }
     });

@@ -93,7 +93,7 @@ export const authenticateSocket = async (
 
   } catch (error) {
     logger.warn('WebSocket authentication failed', {
-      error: error.message,
+      error: (error as any)?.message,
       socketId: socket.id,
       ip: socket.request.connection.remoteAddress,
     });
@@ -173,7 +173,7 @@ export const validateSocketData = (schema: any) => {
       next();
     } catch (error) {
       logger.warn('WebSocket data validation failed', {
-        error: error.message,
+        error: (error as any)?.message,
         data,
       });
       next(new Error('Invalid event data'));

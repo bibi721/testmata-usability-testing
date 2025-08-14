@@ -25,8 +25,8 @@ if (!fs.existsSync(uploadDir)) {
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadType = req.params.type || 'general';
+  destination: (req, _file, cb) => {
+    const uploadType = (req.params as any)['type'] || 'general';
     const typeDir = path.join(uploadDir, uploadType);
     
     if (!fs.existsSync(typeDir)) {
@@ -35,7 +35,7 @@ const storage = multer.diskStorage({
     
     cb(null, typeDir);
   },
-  filename: (req, file, cb) => {
+  filename: (_req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
     const ext = path.extname(file.originalname);
     cb(null, `${file.fieldname}-${uniqueSuffix}${ext}`);
@@ -47,9 +47,9 @@ const upload = multer({
   limits: {
     fileSize: config.upload.maxFileSize,
   },
-  fileFilter: (req, file, cb) => {
+  fileFilter: (_req, file, cb) => {
     // Check file type
-    if (config.upload.allowedMimeTypes.includes(file.mimetype)) {
+    if ((config.upload.allowedMimeTypes as ReadonlyArray<string>).includes(file.mimetype as any)) {
       cb(null, true);
     } else {
       cb(new ApiError(400, `File type ${file.mimetype} is not allowed`));
@@ -64,7 +64,7 @@ const upload = multer({
 router.post('/:type',
   upload.array('files', 10), // Allow up to 10 files
   asyncHandler(async (req: AuthenticatedRequest, res) => {
-    const { type } = req.params;
+    const { type } = req.params as any;
     const userId = req.user?.id;
     const files = req.files as Express.Multer.File[];
 
@@ -73,7 +73,7 @@ router.post('/:type',
     }
 
     const allowedTypes = ['test-assets', 'recordings', 'avatars', 'general'];
-    if (!allowedTypes.includes(type)) {
+    if (!allowedTypes.includes(type as any)) {
       throw new ApiError(400, 'Invalid upload type');
     }
 
@@ -136,7 +136,7 @@ router.post('/:type',
 router.get('/:type/:filename',
   asyncHandler(async (req, res) => {
     const { type, filename } = req.params;
-    const filePath = path.join(uploadDir, type, filename);
+    const filePath = path.join(uploadDir, type as any, filename as any);
 
     // Check if file exists
     if (!fs.existsSync(filePath)) {
@@ -145,7 +145,7 @@ router.get('/:type/:filename',
 
     // Get file stats
     const stats = fs.statSync(filePath);
-    const mimeType = getMimeType(filename);
+    const mimeType = getMimeType(filename as any);
 
     // Set appropriate headers
     res.setHeader('Content-Type', mimeType);
@@ -164,9 +164,9 @@ router.get('/:type/:filename',
  */
 router.delete('/:type/:filename',
   asyncHandler(async (req: AuthenticatedRequest, res) => {
-    const { type, filename } = req.params;
+    const { type, filename } = req.params as any;
     const userId = req.user?.id;
-    const filePath = path.join(uploadDir, type, filename);
+    const filePath = path.join(uploadDir, type as any, filename as any);
 
     // Check if file exists
     if (!fs.existsSync(filePath)) {
@@ -178,13 +178,11 @@ router.delete('/:type/:filename',
       const testAsset = await prisma.testAsset.findFirst({
         where: { fileName: filename },
         include: {
-          test: {
-            select: { createdById: true },
-          },
+          test: true,
         },
       });
 
-      if (testAsset && testAsset.test.createdById !== userId) {
+      if (testAsset && (testAsset as any).test.createdById !== userId) {
         throw new ApiError(403, 'You can only delete your own files');
       }
 
@@ -218,7 +216,7 @@ router.delete('/:type/:filename',
  */
 router.get('/test-assets/:testId',
   asyncHandler(async (req: AuthenticatedRequest, res) => {
-    const { testId } = req.params;
+    const { testId } = req.params as any;
     const userId = req.user?.id;
 
     // Verify test ownership or tester access
@@ -241,7 +239,7 @@ router.get('/test-assets/:testId',
     }
 
     const assets = await prisma.testAsset.findMany({
-      where: { testId },
+      where: { testId: testId },
       orderBy: { createdAt: 'desc' },
     });
 

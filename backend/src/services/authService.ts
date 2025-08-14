@@ -110,18 +110,18 @@ export class AuthService {
           await tx.testerProfile.create({
             data: {
               userId: user.id,
-              phone: testerData.phone,
-              city: testerData.city,
-              region: testerData.region,
-              age: testerData.age,
-              education: testerData.education,
-              occupation: testerData.occupation,
-              experience: testerData.experience,
+              phone: testerData.phone ?? null,
+              city: testerData.city ?? null,
+              region: testerData.region ?? null,
+              age: testerData.age ?? null,
+              education: testerData.education ?? null,
+              occupation: testerData.occupation ?? null,
+              experience: testerData.experience ?? null,
               languages: testerData.languages || [],
               devices: testerData.devices || [],
-              internetSpeed: testerData.internetSpeed,
-              availability: testerData.availability,
-              motivation: testerData.motivation,
+              internetSpeed: testerData.internetSpeed ?? null,
+              availability: testerData.availability ?? null,
+              motivation: testerData.motivation ?? null,
             },
           });
         }
@@ -447,15 +447,15 @@ export class AuthService {
         email: user.email,
         userType: user.userType,
       },
-      config.jwt.secret,
-      { expiresIn: config.jwt.expiresIn }
+      config.jwt.secret as string,
+      { expiresIn: config.jwt.expiresIn as any }
     );
 
     // Generate refresh token
     const refreshTokenString = jwt.sign(
       { userId: user.id },
-      config.jwt.refreshSecret,
-      { expiresIn: config.jwt.refreshExpiresIn }
+      config.jwt.refreshSecret as string,
+      { expiresIn: config.jwt.refreshExpiresIn as any }
     );
 
     // Store refresh token in database

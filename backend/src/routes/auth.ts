@@ -9,6 +9,7 @@ import { validateRequest, authSchemas } from '@/middleware/validation';
 import { asyncHandler } from '@/middleware/errorHandler';
 import { sensitiveOperationLimit } from '@/middleware/auth';
 import { logger } from '@/utils/logger';
+import { z } from 'zod';
 
 const router = Router();
 

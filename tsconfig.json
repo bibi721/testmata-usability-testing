@@ -29,6 +29,7 @@
   ],
   "exclude": [
     "node_modules",
-    "backend"           // <- exclude backend completely
+    "backend",
+    "backend/**"
   ]
 }

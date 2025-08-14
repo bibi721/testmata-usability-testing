@@ -27,8 +27,8 @@ router.get('/',
     const userType = req.user!.userType;
     const { page, limit, sortBy = 'createdAt', sortOrder = 'desc' } = req.query as any;
 
-    let payments;
-    let total;
+    let payments: any[] = [];
+    let total = 0;
 
     if (userType === 'CUSTOMER') {
       [payments, total] = await Promise.all([
@@ -52,18 +52,7 @@ router.get('/',
       ]);
     }
 
-    res.json({
-      success: true,
-      data: {
-        payments,
-        pagination: {
-          page,
-          limit,
-          total,
-          pages: Math.ceil(total / limit),
-        },
-      },
-    });
+    res.json({ success: true, data: { payments, pagination: { page, limit, total, pages: Math.ceil((total || 0) / (limit || 1)) } } });
   })
 );
 
@@ -92,7 +81,7 @@ router.post('/',
     });
 
     // Process payment based on method
-    let paymentResult;
+    let paymentResult: any;
     try {
       switch (method) {
         case 'CHAPA':
@@ -115,12 +104,9 @@ router.post('/',
       const updatedPayment = await prisma.payment.update({
         where: { id: payment.id },
         data: {
-          status: paymentResult.status,
+          status: paymentResult.status as any,
           transactionId: paymentResult.transactionId,
-          metadata: {
-            ...payment.metadata,
-            ...paymentResult.metadata,
-          },
+          metadata: (payment.metadata as any) || (paymentResult.metadata as any),
         },
       });
 
@@ -143,7 +129,7 @@ router.post('/',
           paymentUrl: paymentResult.paymentUrl,
         },
       });
-    } catch (error) {
+    } catch (error: any) {
       // Update payment status to failed
       await prisma.payment.update({
         where: { id: payment.id },
@@ -227,32 +213,29 @@ router.post('/:id/verify',
     }
 
     // Verify payment with provider
-    let verificationResult;
+    let verificationResult: any;
     try {
       switch (payment.method) {
         case 'CHAPA':
-          verificationResult = await verifyEthiopianPayment('chapa', payment.transactionId);
+          verificationResult = await verifyEthiopianPayment('chapa', payment.transactionId as string);
           break;
         case 'TELEBIRR':
-          verificationResult = await verifyEthiopianPayment('telebirr', payment.transactionId);
+          verificationResult = await verifyEthiopianPayment('telebirr', payment.transactionId as string);
           break;
         case 'CBE_BIRR':
-          verificationResult = await verifyEthiopianPayment('cbe_birr', payment.transactionId);
+          verificationResult = await verifyEthiopianPayment('cbe_birr', payment.transactionId as string);
           break;
         default:
-          verificationResult = await verifyInternationalPayment(payment.transactionId);
+          verificationResult = await verifyInternationalPayment(payment.transactionId as string);
       }
 
       // Update payment status
       const updatedPayment = await prisma.payment.update({
         where: { id },
         data: {
-          status: verificationResult.status,
+          status: verificationResult.status as any,
           paidAt: verificationResult.status === 'COMPLETED' ? new Date() : null,
-          metadata: {
-            ...payment.metadata,
-            ...verificationResult.metadata,
-          },
+          metadata: (payment.metadata as any) || (verificationResult.metadata as any),
         },
       });
 
@@ -281,7 +264,7 @@ router.post('/:id/verify',
         message: 'Payment verification completed',
         data: { payment: updatedPayment },
       });
-    } catch (error) {
+    } catch (error: any) {
       logger.error('Payment verification failed', {
         paymentId: id,
         error: error.message,
@@ -290,6 +273,7 @@ router.post('/:id/verify',
 
       throw new PaymentError('Payment verification failed');
     }
+    return;
   })
 );
 

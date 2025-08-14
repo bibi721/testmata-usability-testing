@@ -213,27 +213,27 @@ export const requireEmailVerification = async (
 export const sensitiveOperationLimit = (maxAttempts: number, windowMs: number) => {
   const attempts = new Map<string, { count: number; resetTime: number }>();
 
-  return (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
-    const key = req.user?.id || req.ip;
+  return (req: AuthenticatedRequest, _res: Response, next: NextFunction): void => {
+    const key: string = req.user?.id || req.ip || 'anonymous';
     const now = Date.now();
-    const userAttempts = attempts.get(key);
+    const current = attempts.get(key);
 
-    if (!userAttempts || now > userAttempts.resetTime) {
+    if (!current || now > current.resetTime) {
       attempts.set(key, { count: 1, resetTime: now + windowMs });
       return next();
     }
 
-    if (userAttempts.count >= maxAttempts) {
+    if (current.count >= maxAttempts) {
       logger.warn('Rate limit exceeded for sensitive operation', {
         userId: req.user?.id,
         ip: req.ip,
         endpoint: req.originalUrl,
-        attempts: userAttempts.count,
+        attempts: current.count,
       });
       return next(new ApiError(429, 'Too many attempts. Please try again later.'));
     }
 
-    userAttempts.count++;
+    current.count++;
     next();
   };
 };

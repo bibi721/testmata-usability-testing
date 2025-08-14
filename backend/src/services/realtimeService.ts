@@ -46,7 +46,7 @@ export class RealtimeService {
       if (this.socketManager) {
         this.socketManager.broadcastToTest(testId, 'test:status_changed', {
           testId,
-          status: newStatus,
+          status: newStatus as any,
           updatedBy: userId,
           timestamp: new Date(),
         });
@@ -258,7 +258,7 @@ export class RealtimeService {
       await prisma.payment.update({
         where: { id: paymentId },
         data: {
-          status: newStatus,
+          status: newStatus as any,
           ...(newStatus === 'COMPLETED' && { paidAt: new Date() }),
         },
       });

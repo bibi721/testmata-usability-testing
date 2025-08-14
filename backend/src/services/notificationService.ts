@@ -5,6 +5,7 @@
 
 import { PrismaClient, NotificationType } from '@prisma/client';
 import { logger } from '@/utils/logger';
+import SocketManager from '@/websocket/socketManager';
 import { emailService } from '@/services/emailService';
 
 const prisma = new PrismaClient();
@@ -26,12 +27,12 @@ interface NotificationData {
  * Notification Service Class
  */
 export class NotificationService {
-  private socketManager?: any; // Will be injected
+  private socketManager?: SocketManager; // Injected from server at runtime
 
   /**
    * Set socket manager for real-time notifications
    */
-  setSocketManager(socketManager: any) {
+  setSocketManager(socketManager: SocketManager) {
     this.socketManager = socketManager;
   }
 
@@ -53,7 +54,7 @@ export class NotificationService {
 
       // Send real-time notification if socket manager is available
       if (this.socketManager) {
-        this.socketManager.sendNotificationToUser(notificationData.userId, {
+        await this.socketManager.sendNotificationToUser(notificationData.userId, {
           id: notification.id,
           type: notificationData.type,
           title: notificationData.title,
@@ -165,6 +166,18 @@ export class NotificationService {
       }));
 
       await this.sendBulkNotifications(notifications);
+
+      // Real-time: push 'test:new' to connected testers
+      if (this.socketManager) {
+        for (const tester of eligibleTesters) {
+          this.socketManager.broadcastToUser(tester.id, 'test:new', {
+            testId: test.id,
+            title: test.title,
+            paymentPerTester: test.paymentPerTester,
+            estimatedDuration: test.estimatedDuration,
+          });
+        }
+      }
 
       // Notify test creator
       await this.sendNotification({
@@ -304,6 +317,23 @@ export class NotificationService {
         },
       });
 
+      // Real-time: update earnings summary for tester dashboard
+      if (this.socketManager) {
+        const [totalEarnings, thisMonth, pending] = await Promise.all([
+          prisma.earning.aggregate({ where: { testerId: session.testerId, status: 'COMPLETED' }, _sum: { amount: true } }),
+          prisma.earning.aggregate({ where: { testerId: session.testerId, status: 'COMPLETED', createdAt: { gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1) } }, _sum: { amount: true } }),
+          prisma.earning.aggregate({ where: { testerId: session.testerId, status: 'PENDING' }, _sum: { amount: true } }),
+        ]);
+
+        this.socketManager.broadcastToUser(session.testerId, 'earnings:updated', {
+          summary: {
+            totalEarnings: totalEarnings._sum.amount || 0,
+            thisMonthEarnings: thisMonth._sum.amount || 0,
+            pendingAmount: pending._sum.amount || 0,
+          },
+        });
+      }
+
     } catch (error) {
       logger.error('Failed to send session completed notifications', { error, sessionId });
     }
@@ -396,7 +426,7 @@ export class NotificationService {
       userId,
       type: 'ACCOUNT_UPDATE',
       title: 'Account Update',
-      message: messages[updateType] || 'Your account has been updated.',
+      message: (messages as any)[updateType] || 'Your account has been updated.',
       data: { updateType },
       sendEmail: ['password_changed', 'account_suspended'].includes(updateType),
     });

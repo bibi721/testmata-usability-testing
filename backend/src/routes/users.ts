@@ -285,6 +285,50 @@ router.get('/notifications',
 );
 
 /**
+ * GET /api/v1/users/notifications/unread-count
+ * Get unread notifications count
+ */
+router.get('/notifications/unread-count',
+  asyncHandler(async (req: AuthenticatedRequest, res) => {
+    const userId = req.user!.id;
+    const count = await prisma.notification.count({ where: { userId, read: false } });
+    res.json({ success: true, data: { count } });
+  })
+);
+
+/**
+ * POST /api/v1/users/notifications/read-all
+ * Mark all notifications as read for current user
+ */
+router.post('/notifications/read-all',
+  asyncHandler(async (req: AuthenticatedRequest, res) => {
+    const userId = req.user!.id;
+    const result = await prisma.notification.updateMany({
+      where: { userId, read: false },
+      data: { read: true, readAt: new Date() },
+    });
+    logger.info('Marked all notifications as read', { userId, updated: result.count });
+    res.json({ success: true, message: 'All notifications marked as read', data: { updated: result.count } });
+  })
+);
+
+/**
+ * GET /api/v1/users/activity
+ * Get recent user activity
+ */
+router.get('/activity',
+  asyncHandler(async (req: AuthenticatedRequest, res) => {
+    const userId = req.user!.id;
+    const activity = await prisma.analytics.findMany({
+      where: { userId },
+      orderBy: { timestamp: 'desc' },
+      take: 50,
+    });
+    res.json({ success: true, data: { activity } });
+  })
+);
+
+/**
  * PUT /api/v1/users/notifications/:id/read
  * Mark notification as read
  */

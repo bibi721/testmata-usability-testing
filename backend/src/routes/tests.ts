@@ -14,6 +14,8 @@ import { AuthenticatedRequest } from '@/middleware/auth';
 import { emailService } from '@/services/emailService';
 
 const router = Router();
+const customerRouter = Router();
+const testerRouter = Router();
 const prisma = new PrismaClient();
 
 /**
@@ -35,6 +37,8 @@ router.get('/',
     } else if (userType === 'TESTER') {
       // Testers see only published tests
       whereClause.status = 'PUBLISHED';
+      // Ensure testers see only tests created by customers
+      whereClause.createdBy = { userType: 'CUSTOMER' } as any;
     }
 
     const [tests, total] = await Promise.all([
@@ -74,10 +78,115 @@ router.get('/',
 );
 
 /**
+ * POST /api/v1/tests/:id/duplicate
+ * Duplicate a test (customer only)
+ */
+customerRouter.post('/:id/duplicate',
+  requireRole('CUSTOMER'),
+  validateRequest({ params: commonSchemas.id }),
+  asyncHandler(async (req: AuthenticatedRequest, res) => {
+    const { id } = req.params;
+    const userId = req.user!.id;
+
+    const test = await prisma.test.findUnique({ where: { id } });
+    if (!test) throw new NotFoundError('Test');
+    if (test.createdById !== userId) throw new AuthorizationError('You can only duplicate your own tests');
+
+    const copy = await prisma.test.create({
+      data: {
+        title: `${test.title} (Copy)`,
+        description: test.description,
+        instructions: test.instructions,
+        testType: test.testType,
+        platform: test.platform,
+        targetUrl: test.targetUrl,
+        maxTesters: test.maxTesters,
+        paymentPerTester: test.paymentPerTester,
+        estimatedDuration: test.estimatedDuration,
+        requirements: test.requirements,
+        // Preserve JSON fields safely
+        tasks: (test as any).tasks ?? undefined,
+        demographics: (test as any).demographics ?? undefined,
+        createdById: userId,
+        status: 'DRAFT',
+      },
+    });
+
+    logger.info('Test duplicated', { sourceId: id, newId: copy.id, userId });
+
+    res.status(201).json({ success: true, message: 'Test duplicated', data: { test: copy } });
+  })
+);
+
+/**
+ * POST /api/v1/tests/:id/invite-testers
+ * Invite a list of tester emails (customer only)
+ */
+customerRouter.post('/:id/invite-testers',
+  requireRole('CUSTOMER'),
+  asyncHandler(async (req: AuthenticatedRequest, res) => {
+    const { id } = req.params as any;
+    const userId = req.user!.id;
+    const { emails } = (req.body as { emails?: string[] }) || {};
+
+    const test = await prisma.test.findUnique({ where: { id }, select: { id: true, title: true, createdById: true, paymentPerTester: true } });
+    if (!test) throw new NotFoundError('Test');
+    if (test.createdById !== userId) throw new AuthorizationError('You can only invite for your own tests');
+
+    const safeEmails = Array.isArray(emails) ? emails.filter(Boolean) : [];
+    await Promise.all(
+      safeEmails.map(email =>
+        emailService.sendTestInvitation(email, email.split('@')[0], {
+          id: test.id,
+          title: test.title,
+          paymentPerTester: test.paymentPerTester,
+        })
+      )
+    );
+
+    logger.info('Invited testers to test', { testId: id, count: (emails || []).length, userId });
+    res.json({ success: true, message: 'Invitations sent' });
+  })
+);
+
+/**
+ * GET /api/v1/tests/available
+ * Tester available tests with filters (tester only)
+ */
+testerRouter.get('/available',
+  requireRole('TESTER'),
+  asyncHandler(async (req: AuthenticatedRequest, res) => {
+    const { platform, minPay, maxDuration } = req.query as any;
+
+    const where: any = { status: 'PUBLISHED', createdBy: { userType: 'CUSTOMER' } };
+    if (platform) where.platform = platform;
+    if (minPay) where.paymentPerTester = { gte: Number(minPay) };
+    if (maxDuration) where.estimatedDuration = { lte: Number(maxDuration) };
+
+    const tests = await prisma.test.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      take: 50,
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        platform: true,
+        paymentPerTester: true,
+        estimatedDuration: true,
+        requirements: true,
+      },
+    });
+
+    res.json({ success: true, data: { tests } });
+  })
+);
+
+/**
  * POST /api/v1/tests
  * Create a new test
  */
-router.post('/',
+customerRouter.post('/',
   requireRole('CUSTOMER'),
   requireEmailVerification,
   validateRequest({ body: testSchemas.createTest }),
@@ -124,9 +233,7 @@ router.get('/:id',
     const test = await prisma.test.findUnique({
       where: { id },
       include: {
-        createdBy: {
-          select: { id: true, name: true, email: true },
-        },
+        createdBy: { select: { id: true, name: true, email: true, userType: true } },
         testAssets: true,
         testSessions: {
           include: {
@@ -161,6 +268,10 @@ router.get('/:id',
       throw new AuthorizationError('Test is not available for testing');
     }
 
+    if (userType === 'TESTER' && (test as any).createdBy?.userType !== 'CUSTOMER') {
+      throw new AuthorizationError('Test is not available');
+    }
+
     res.json({
       success: true,
       data: { test },
@@ -172,7 +283,7 @@ router.get('/:id',
  * PUT /api/v1/tests/:id
  * Update test
  */
-router.put('/:id',
+customerRouter.put('/:id',
   requireRole('CUSTOMER'),
   validateRequest({ 
     params: commonSchemas.id,
@@ -228,7 +339,7 @@ router.put('/:id',
  * POST /api/v1/tests/:id/publish
  * Publish test to make it available for testers
  */
-router.post('/:id/publish',
+customerRouter.post('/:id/publish',
   requireRole('CUSTOMER'),
   validateRequest({ params: commonSchemas.id }),
   asyncHandler(async (req: AuthenticatedRequest, res) => {
@@ -314,7 +425,7 @@ router.post('/:id/publish',
  * POST /api/v1/tests/:id/pause
  * Pause a running test
  */
-router.post('/:id/pause',
+customerRouter.post('/:id/pause',
   requireRole('CUSTOMER'),
   validateRequest({ params: commonSchemas.id }),
   asyncHandler(async (req: AuthenticatedRequest, res) => {
@@ -357,7 +468,7 @@ router.post('/:id/pause',
  * POST /api/v1/tests/:id/complete
  * Mark test as completed
  */
-router.post('/:id/complete',
+customerRouter.post('/:id/complete',
   requireRole('CUSTOMER'),
   validateRequest({ params: commonSchemas.id }),
   asyncHandler(async (req: AuthenticatedRequest, res) => {
@@ -395,22 +506,24 @@ router.post('/:id/complete',
     });
 
     // Send completion notification
-    emailService.sendTestCompletionNotification(
-      test.createdBy.email,
-      test.createdBy.name,
+    if (test.createdBy) {
+      emailService.sendTestCompletionNotification(
+        (test as any).createdBy.email,
+        (test as any).createdBy.name,
       {
         id: test.id,
         title: test.title,
-        completedTesters: test.testerSessions.length,
+        completedTesters: (test as any).testerSessions.length,
       }
-    ).catch(error => {
-      logger.error('Failed to send test completion notification', { error, testId: id });
-    });
+      ).catch(error => {
+        logger.error('Failed to send test completion notification', { error, testId: id });
+      });
+    }
 
     logger.info('Test completed', {
       testId: id,
       userId,
-      completedTesters: test.testerSessions.length,
+      completedTesters: (test as any).testerSessions?.length || 0,
     });
 
     res.json({
@@ -425,7 +538,7 @@ router.post('/:id/complete',
  * DELETE /api/v1/tests/:id
  * Delete test (only if not started)
  */
-router.delete('/:id',
+customerRouter.delete('/:id',
   requireRole('CUSTOMER'),
   validateRequest({ params: commonSchemas.id }),
   asyncHandler(async (req: AuthenticatedRequest, res) => {
@@ -471,7 +584,7 @@ router.delete('/:id',
  * GET /api/v1/tests/:id/analytics
  * Get test analytics
  */
-router.get('/:id/analytics',
+customerRouter.get('/:id/analytics',
   requireRole('CUSTOMER'),
   validateRequest({ params: commonSchemas.id }),
   asyncHandler(async (req: AuthenticatedRequest, res) => {
@@ -567,5 +680,9 @@ router.get('/:id/analytics',
     });
   })
 );
+
+// mount sub-routers under role paths
+router.use('/customer', customerRouter);
+router.use('/tester', testerRouter);
 
 export default router;

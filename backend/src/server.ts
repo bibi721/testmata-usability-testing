@@ -6,6 +6,7 @@
  */
 
 import express from 'express';
+import { createServer } from 'http';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
@@ -23,6 +24,8 @@ import sessionRoutes from '@/routes/sessions';
 import paymentRoutes from '@/routes/payments';
 import analyticsRoutes from '@/routes/analytics';
 import uploadRoutes from '@/routes/uploads';
+import SocketManager from '@/websocket/socketManager';
+import { notificationService } from '@/services/notificationService';
 
 /**
  * Express application setup with Ethiopian market considerations
@@ -30,6 +33,8 @@ import uploadRoutes from '@/routes/uploads';
 class MasadaServer {
   private app: express.Application;
   private port: number;
+  private httpServer?: any;
+  private socketManager?: SocketManager;
 
   constructor() {
     this.app = express();
@@ -37,6 +42,7 @@ class MasadaServer {
     this.initializeMiddleware();
     this.initializeRoutes();
     this.initializeErrorHandling();
+    this.initializeWebsocket();
   }
 
   /**
@@ -152,10 +158,25 @@ class MasadaServer {
   }
 
   /**
+   * Initialize WebSocket server
+   */
+  private initializeWebsocket(): void {
+    this.httpServer = createServer(this.app);
+    try {
+      this.socketManager = new SocketManager(this.httpServer);
+      notificationService.setSocketManager(this.socketManager);
+    } catch (err) {
+      logger.error('Failed to initialize WebSocket server', { err });
+    }
+  }
+
+  /**
    * Start the server
    */
   public start(): void {
-    this.app.listen(this.port, () => {
+    const server = this.httpServer ?? this.app.listen(this.port);
+    // Ensure HTTP server is listening
+    (server as any).listen?.(this.port, () => {
       logger.info(`🚀 Masada API Server started successfully`);
       logger.info(`📍 Environment: ${config.nodeEnv}`);
       logger.info(`🌐 Server running on port ${this.port}`);

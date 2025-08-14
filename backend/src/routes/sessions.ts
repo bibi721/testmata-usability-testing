@@ -97,6 +97,7 @@ router.post('/start',
         currentTesters: true,
         title: true,
         paymentPerTester: true,
+        createdById: true,
       },
     });
 
@@ -136,7 +137,7 @@ router.post('/start',
         testSession = await tx.testSession.create({
           data: {
             testId,
-            customerId: test.id, // This should be the customer ID from test
+            customerId: test.createdById,
             status: 'IN_PROGRESS',
             startedAt: new Date(),
           },
@@ -281,12 +282,24 @@ router.put('/:id',
       });
 
       // Update tester profile stats
-      await prisma.testerProfile.update({
+      const updatedProfile = await prisma.testerProfile.update({
         where: { userId },
         data: {
           completedTests: { increment: 1 },
           totalEarnings: { increment: existingSession.test.paymentPerTester },
         },
+      });
+
+      // Recalculate dynamic tester rating (weighted average of session ratings)
+      const ratingAgg = await prisma.testerSession.aggregate({
+        where: { testerId: userId, status: 'COMPLETED', rating: { not: null } },
+        _avg: { rating: true },
+      });
+
+      const newRating = ratingAgg._avg.rating || 0;
+      await prisma.testerProfile.update({
+        where: { userId },
+        data: { rating: newRating },
       });
 
       // Log completion
