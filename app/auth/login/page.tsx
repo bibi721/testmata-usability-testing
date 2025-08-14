@@ -198,7 +198,7 @@ const LoginPage = () => {
             {/* Sign Up Links */}
             <div className="text-center pt-4 border-t border-slate-200 space-y-2">
               <p className="text-sm text-slate-600">
-                Don't have an account?
+                Don&apos;t have an account?
               </p>
               <div className="flex flex-col space-y-2">
                 <Link

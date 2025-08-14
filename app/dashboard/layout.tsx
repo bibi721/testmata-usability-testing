@@ -1,5 +1,5 @@
 import '../globals.css';
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import Header from '@/components/Header';
 
@@ -10,7 +10,11 @@ export const metadata: Metadata = {
   description: 'Manage your Ethiopian user testing campaigns and analyze results from your dashboard.',
   keywords: 'usability testing dashboard, Ethiopian user testing, test management, UX analytics',
   authors: [{ name: 'Masada' }],
-  viewport: 'width=device-width, initial-scale=1',
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
 };
 
 export default function DashboardLayout({

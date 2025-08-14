@@ -241,7 +241,7 @@ const TesterDashboardComponent = () => {
                     Welcome to Masada Tester Community! 🎉
                   </h3>
                   <p className="text-blue-800 mb-4">
-                    You're now part of Ethiopia's premier user testing community. Start earning by testing apps and websites from Ethiopian companies.
+                    You&apos;re now part of Ethiopia&apos;s premier user testing community. Start earning by testing apps and websites from Ethiopian companies.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-3">
                     <Button className="bg-blue-600 hover:bg-blue-700 text-white">

@@ -2,6 +2,7 @@
  * Reusable testimonial card component
  */
 import React from 'react';
+import Image from 'next/image';
 import { Star, Quote } from 'lucide-react';
 
 interface TestimonialCardProps {
@@ -28,7 +29,7 @@ export const TestimonialCard: React.FC<TestimonialCardProps> = React.memo(({
       <Quote className="h-8 w-8 text-blue-600 mb-6" />
       
       <blockquote className="text-xl text-slate-700 mb-6 leading-relaxed">
-        "{content}"
+        &ldquo;{content}&rdquo;
       </blockquote>
 
       {metric && (
@@ -40,9 +41,11 @@ export const TestimonialCard: React.FC<TestimonialCardProps> = React.memo(({
 
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <img
+          <Image
             src={image}
             alt={name}
+            width={48}
+            height={48}
             className="w-12 h-12 rounded-full object-cover"
           />
           <div>

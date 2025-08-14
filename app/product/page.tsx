@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -269,7 +270,7 @@ const ProductPage = () => {
                         <p className="text-slate-600">Real feedback in Amharic and English</p>
                         <div className="bg-slate-100 p-4 rounded-lg text-left max-w-sm mx-auto">
                           <div className="text-sm text-slate-600 mb-2">User feedback:</div>
-                          <div className="text-slate-900 mb-2">"The payment process is confusing. I prefer mobile money options."</div>
+                          <div className="text-slate-900 mb-2">&ldquo;The payment process is confusing. I prefer mobile money options.&rdquo;</div>
                           <div className="text-xs text-slate-500">Tester from Addis Ababa - Age 28</div>
                         </div>
                       </div>
@@ -392,9 +393,11 @@ const ProductPage = () => {
                 <div className="flex-1">
                   <Card className="border-slate-200 shadow-lg hover:shadow-xl transition-shadow">
                     <CardContent className="p-0">
-                      <img
+                      <Image
                         src={useCase.image}
                         alt={useCase.title}
+                        width={400}
+                        height={256}
                         className="w-full h-64 object-cover rounded-t-lg"
                       />
                       <div className="p-6">

@@ -91,7 +91,7 @@ const Header: React.FC = () => {
       "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
       isScrolled || isDashboard
         ? "bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm" 
-        : "bg-transparent"
+        : "bg-white/90 backdrop-blur-sm border-b border-slate-200/50"
     )}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
@@ -109,7 +109,7 @@ const Header: React.FC = () => {
                   <NavigationMenuTrigger className="text-slate-700 hover:text-blue-600">
                     Features
                   </NavigationMenuTrigger>
-                  <NavigationMenuContent>
+                  <NavigationMenuContent className="z-50">
                     <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                       {features.map((feature) => (
                         <li key={feature.title}>
@@ -219,7 +219,7 @@ const Header: React.FC = () => {
                       <ChevronDown className="h-4 w-4 text-slate-400" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuContent align="end" className="w-56 z-50">
                     <DropdownMenuLabel>
                       <div>
                         <p className="font-medium">{user.name}</p>
@@ -279,7 +279,7 @@ const Header: React.FC = () => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden border-t border-slate-200 bg-white">
+          <div className="lg:hidden border-t border-slate-200 bg-white/95 backdrop-blur-md">
             <div className="px-2 pt-2 pb-3 space-y-1">
               {!isDashboard && (
                 <>

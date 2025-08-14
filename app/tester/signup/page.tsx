@@ -385,8 +385,8 @@ const TesterSignupPage = () => {
                             <SelectContent>
                               <SelectItem value="high-school">High School</SelectItem>
                               <SelectItem value="diploma">Diploma</SelectItem>
-                              <SelectItem value="bachelor">Bachelor's Degree</SelectItem>
-                              <SelectItem value="master">Master's Degree</SelectItem>
+                              <SelectItem value="bachelor">Bachelor&apos;s Degree</SelectItem>
+                              <SelectItem value="master">Master&apos;s Degree</SelectItem>
                               <SelectItem value="phd">PhD</SelectItem>
                             </SelectContent>
                           </Select>
@@ -509,8 +509,8 @@ const TesterSignupPage = () => {
                       <div className="bg-blue-50 p-4 rounded-lg">
                         <h4 className="font-medium text-blue-900 mb-2">Next Steps</h4>
                         <p className="text-sm text-blue-800">
-                          After submitting your application, you'll receive an email with a qualification test. 
-                          This test helps us understand your testing skills and ensures you're ready to provide 
+                          After submitting your application, you&apos;ll receive an email with a qualification test. 
+                          This test helps us understand your testing skills and ensures you&apos;re ready to provide 
                           valuable feedback to our clients.
                         </p>
                       </div>

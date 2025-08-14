@@ -148,7 +148,7 @@ const CustomerDashboard = () => {
               Welcome back, {user?.name}
             </h1>
             <p className="text-slate-600">
-              Here's how your Ethiopian user testing is performing.
+              Here&apos;s how your Ethiopian user testing is performing.
             </p>
           </div>
           <div className="flex items-center space-x-4 mt-4 sm:mt-0">
