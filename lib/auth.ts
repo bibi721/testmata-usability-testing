@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 
 export const authOptions: NextAuthOptions = {
-  // adapter: PrismaAdapter(prisma), // Temporarily disabled due to Prisma client issues
+  adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
       name: 'credentials',
@@ -45,18 +45,18 @@ export const authOptions: NextAuthOptions = {
           name: user.name,
           userType: user.userType,
           status: user.status,
-          emailVerified: user.emailVerified,
+          emailVerified: Boolean(user.emailVerified),
           ...(user.userType === 'CUSTOMER' && user.customerProfile ? {
             plan: user.customerProfile.plan,
-            company: user.customerProfile.company,
+            company: user.customerProfile.company ?? undefined,
           } : {}),
           ...(user.userType === 'TESTER' && user.testerProfile ? {
-            rating: user.testerProfile.rating,
+            rating: user.testerProfile.rating != null ? Number(user.testerProfile.rating) : undefined,
             completedTests: user.testerProfile.completedTests,
-            earnings: user.testerProfile.totalEarnings,
+            earnings: user.testerProfile.totalEarnings != null ? Number(user.testerProfile.totalEarnings) : undefined,
             level: user.testerProfile.level,
           } : {})
-        };
+        } as any;
       }
     })
   ],
