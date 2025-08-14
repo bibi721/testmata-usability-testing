@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google';
 import { AuthProvider } from '@/contexts/AuthContext';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 // Load Inter font with fallback and best practices
 const inter = Inter({ 
@@ -44,6 +45,7 @@ export default function RootLayout({
             <Footer />
           </div>
         </AuthProvider>
+        <SpeedInsights />
       </body>
     </html>
   );
