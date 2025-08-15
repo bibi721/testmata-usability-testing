@@ -28,8 +28,6 @@
     ".next/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules",
-    "backend",
-    "backend/**"
+    "node_modules"
   ]
 }
