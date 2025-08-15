@@ -22,10 +22,10 @@ export const viewport: Viewport = {
 
 // ✅ metadata no longer includes "viewport"
 export const metadata: Metadata = {
-  title: 'TestMata - Ethiopian Usability Testing Platform',
+  title: 'Masada - Ethiopian Usability Testing Platform',
   description: 'Professional usability testing platform designed for Ethiopian tech companies and small businesses. Get actionable insights from real Ethiopian users to improve your web applications and websites.',
   keywords: 'usability testing Ethiopia, Ethiopian user testing, web app testing Ethiopia, UX research Ethiopia, user feedback Ethiopia',
-  authors: [{ name: 'Masada Inc' }],
+  authors: [{ name: 'Masada' }],
 };
 
 export default function RootLayout({
