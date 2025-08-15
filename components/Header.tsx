@@ -98,7 +98,7 @@ const Header: React.FC = () => {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <Target className="h-8 w-8 text-blue-600" />
-            <span className="text-xl font-bold text-slate-900">Masada</span>
+            <span className="text-xl font-bold text-slate-900">TestMata</span>
           </Link>
 
           {/* Desktop Navigation */}
