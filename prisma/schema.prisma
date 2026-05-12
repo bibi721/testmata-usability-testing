@@ -2,11 +2,9 @@
 // Ethiopian Usability Testing Platform
 
 generator client {
- provider = "prisma-client-ts"
+  provider = "prisma-client-js"
   previewFeatures = ["clientExtensions"]
   binaryTargets = ["native"]
-  // 👇 Add this if needed
-  seed = "node prisma/seed.ts"
 }
 
 

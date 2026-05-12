@@ -63,6 +63,8 @@ const Header: React.FC = () => {
     setIsMobileMenuOpen(false);
   }, [logout, setIsMobileMenuOpen]);
 
+  const dashboardHref = user?.userType === 'tester' ? '/tester/dashboard' : '/dashboard';
+
   const features = [
     {
       title: "Ethiopian User Testing",
@@ -228,7 +230,7 @@ const Header: React.FC = () => {
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>
-                      <Link href="/dashboard" className="flex items-center w-full">
+                      <Link href={dashboardHref} className="flex items-center w-full">
                         <BarChart3 className="mr-2 h-4 w-4" />
                         Dashboard
                       </Link>

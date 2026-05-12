@@ -40,6 +40,11 @@ export default function TesterDashboard() {
   useEffect(() => {
     if (!user) {
       router.push('/auth/login');
+      return;
+    }
+
+    if (user.userType !== 'customer') {
+      router.push('/tester/dashboard');
     }
   }, [user, router]);
 

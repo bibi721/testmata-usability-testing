@@ -9,8 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Separator } from '@/components/ui/separator';
-import { Target, Eye, EyeOff, Loader2, Mail, Github, AlertTriangle } from 'lucide-react';
+import { Target, Eye, EyeOff, Loader2, AlertTriangle } from 'lucide-react';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -30,8 +29,8 @@ const LoginPage = () => {
     }
 
     try {
-      await login(email, password);
-      // Router will be handled by the auth context based on user type
+      const user = await login(email, password);
+      router.push(user.userType === 'tester' ? '/tester/dashboard' : '/dashboard');
     } catch (err: any) {
       if (err.message === 'User not found') {
         setError('No account found with this email. Please check your email or create a new account.');
@@ -39,11 +38,6 @@ const LoginPage = () => {
         setError('Invalid email or password');
       }
     }
-  };
-
-  const handleOAuthLogin = (provider: string) => {
-    // Mock OAuth login
-    console.log(`Login with ${provider}`);
   };
 
   return (
@@ -74,35 +68,6 @@ const LoginPage = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* OAuth Buttons */}
-            <div className="space-y-3">
-              <Button
-                variant="outline"
-                className="w-full h-11 border-slate-300 hover:bg-slate-50"
-                onClick={() => handleOAuthLogin('google')}
-              >
-                <Mail className="h-4 w-4 mr-2" />
-                Continue with Google
-              </Button>
-              <Button
-                variant="outline"
-                className="w-full h-11 border-slate-300 hover:bg-slate-50"
-                onClick={() => handleOAuthLogin('github')}
-              >
-                <Github className="h-4 w-4 mr-2" />
-                Continue with GitHub
-              </Button>
-            </div>
-
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <Separator className="w-full" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-2 text-slate-500">Or continue with email</span>
-              </div>
-            </div>
-
             {/* Error Alert */}
             {error && (
               <Alert className="border-red-200 bg-red-50">
@@ -158,7 +123,7 @@ const LoginPage = () => {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between">
+              <div className="flex items-center">
                 <div className="flex items-center">
                   <input
                     id="remember-me"
@@ -170,13 +135,6 @@ const LoginPage = () => {
                     Remember me
                   </label>
                 </div>
-
-                <Link
-                  href="/auth/forgot-password"
-                  className="text-sm text-blue-600 hover:text-blue-500 font-medium"
-                >
-                  Forgot password?
-                </Link>
               </div>
 
               <Button

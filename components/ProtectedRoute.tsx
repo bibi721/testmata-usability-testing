@@ -33,7 +33,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
         if (redirectTo) {
           router.push(redirectTo);
         } else {
-          const targetRoute = user.userType === 'customer' ? '/dashboard' : '/tester';
+          const targetRoute = user.userType === 'tester' ? '/tester/dashboard' : '/dashboard';
           router.push(targetRoute);
         }
         return;

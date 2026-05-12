@@ -40,6 +40,11 @@ const TesterDashboard = () => {
   useEffect(() => {
     if (!user) {
       router.push('/auth/login');
+      return;
+    }
+
+    if (user.userType !== 'tester') {
+      router.push('/dashboard');
     }
   }, [user, router]);
 

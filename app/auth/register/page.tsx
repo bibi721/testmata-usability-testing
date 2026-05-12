@@ -9,9 +9,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Separator } from '@/components/ui/separator';
 import { Progress } from '@/components/ui/progress';
-import { Target, Eye, EyeOff, Loader2, Mail, Github, Check, X, AlertTriangle } from 'lucide-react';
+import { Target, Eye, EyeOff, Loader2, Check, X, AlertTriangle } from 'lucide-react';
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -105,11 +104,6 @@ const RegisterPage = () => {
     }
   };
 
-  const handleOAuthRegister = (provider: string) => {
-    // Mock OAuth registration
-    console.log(`Register with ${provider}`);
-  };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-sky-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
@@ -138,35 +132,6 @@ const RegisterPage = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* OAuth Buttons */}
-            <div className="space-y-3">
-              <Button
-                variant="outline"
-                className="w-full h-11 border-slate-300 hover:bg-slate-50"
-                onClick={() => handleOAuthRegister('google')}
-              >
-                <Mail className="h-4 w-4 mr-2" />
-                Continue with Google
-              </Button>
-              <Button
-                variant="outline"
-                className="w-full h-11 border-slate-300 hover:bg-slate-50"
-                onClick={() => handleOAuthRegister('github')}
-              >
-                <Github className="h-4 w-4 mr-2" />
-                Continue with GitHub
-              </Button>
-            </div>
-
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <Separator className="w-full" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-2 text-slate-500">Or continue with email</span>
-              </div>
-            </div>
-
             {/* Error Alert */}
             {error && (
               <Alert className="border-red-200 bg-red-50">

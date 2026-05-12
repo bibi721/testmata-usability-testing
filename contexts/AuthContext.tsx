@@ -1,148 +1,192 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { useLocalStorage } from '@/hooks/useLocalStorage';
+import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import { SessionProvider, signIn, signOut, useSession } from 'next-auth/react';
 
 interface User {
   id: string;
   email: string;
   name: string;
   avatar?: string;
-  userType: 'customer' | 'tester';
+  userType: 'customer' | 'tester' | 'admin';
   plan?: 'free' | 'starter' | 'professional' | 'enterprise';
-  // Tester specific fields
   rating?: number;
   completedTests?: number;
   earnings?: number;
   level?: string;
-  // Customer specific fields
   company?: string;
   testsCreated?: number;
+}
+
+interface TesterProfileData {
+  phone?: string;
+  city?: string;
+  region?: string;
+  age?: string;
+  education?: string;
+  occupation?: string;
+  experience?: string;
+  languages?: string[];
+  devices?: string[];
+  internetSpeed?: string;
+  availability?: string;
+  motivation?: string;
 }
 
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, name: string, userType?: 'customer' | 'tester') => Promise<void>;
-  logout: () => void;
+  login: (email: string, password: string) => Promise<User>;
+  register: (
+    email: string,
+    password: string,
+    name: string,
+    userType?: 'customer' | 'tester',
+    profileData?: TesterProfileData
+  ) => Promise<User>;
+  logout: () => Promise<void>;
   updateUser: (userData: Partial<User>) => void;
-  checkEmailExists: (email: string) => Promise<{ exists: boolean; userType?: 'customer' | 'tester' }>;
+  checkEmailExists: (email: string) => Promise<{ exists: boolean; userType?: 'customer' | 'tester' | 'admin' }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Mock database to track registered emails
-const mockUserDatabase: { [email: string]: { userType: 'customer' | 'tester'; userData: User } } = {};
+const normalizeUserType = (userType?: string): User['userType'] => {
+  const normalized = userType?.toLowerCase();
+  if (normalized === 'tester' || normalized === 'admin') {
+    return normalized;
+  }
+  return 'customer';
+};
 
-/**
- * Authentication provider component
- */
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useLocalStorage<User | null>('user', null);
-  const [isLoading, setIsLoading] = useState(true);
+const sessionUserToUser = (sessionUser: any): User | null => {
+  if (!sessionUser?.id || !sessionUser?.email || !sessionUser?.name) {
+    return null;
+  }
 
-  useEffect(() => {
-    // Add existing user to mock database if not already there
-    if (user && !mockUserDatabase[user.email]) {
-      mockUserDatabase[user.email] = {
-        userType: user.userType,
-        userData: user
-      };
+  return {
+    id: sessionUser.id,
+    email: sessionUser.email,
+    name: sessionUser.name,
+    avatar: sessionUser.image,
+    userType: normalizeUserType(sessionUser.userType),
+    plan: sessionUser.plan,
+    rating: sessionUser.rating,
+    completedTests: sessionUser.completedTests,
+    earnings: sessionUser.earnings,
+    level: sessionUser.level,
+    company: sessionUser.company,
+  };
+};
+
+function AuthStateProvider({ children }: { children: React.ReactNode }) {
+  const { data: session, status, update } = useSession();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const user = useMemo(() => sessionUserToUser(session?.user), [session?.user]);
+  const isLoading = status === 'loading' || isSubmitting;
+
+  const fetchCurrentUser = useCallback(async (): Promise<User> => {
+    const response = await fetch('/api/auth/session', { cache: 'no-store' });
+    const nextSession = await response.json();
+    const nextUser = sessionUserToUser(nextSession?.user);
+
+    if (!nextUser) {
+      throw new Error('Unable to load your account session');
     }
-    setIsLoading(false);
-  }, [user]);
 
-  const checkEmailExists = useCallback(async (email: string): Promise<{ exists: boolean; userType?: 'customer' | 'tester' }> => {
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    const existingUser = mockUserDatabase[email.toLowerCase()];
-    if (existingUser) {
-      return {
-        exists: true,
-        userType: existingUser.userType
-      };
+    await update();
+    return nextUser;
+  }, [update]);
+
+  const login = useCallback(async (email: string, password: string): Promise<User> => {
+    setIsSubmitting(true);
+
+    try {
+      const result = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        throw new Error('Invalid email or password');
+      }
+
+      return await fetchCurrentUser();
+    } finally {
+      setIsSubmitting(false);
     }
-    
-    return { exists: false };
+  }, [fetchCurrentUser]);
+
+  const register = useCallback(async (
+    email: string,
+    password: string,
+    name: string,
+    userType: 'customer' | 'tester' = 'customer',
+    profileData: TesterProfileData = {}
+  ): Promise<User> => {
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password,
+          name,
+          userType: userType.toUpperCase(),
+          ...profileData,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Registration failed. Please try again.');
+      }
+
+      return await login(email, password);
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [login]);
+
+  const logout = useCallback(async () => {
+    setIsSubmitting(true);
+
+    try {
+      await signOut({
+        redirect: false,
+        callbackUrl: '/',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   }, []);
 
-  const login = useCallback(async (email: string, password: string) => {
-    setIsLoading(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    const normalizedEmail = email.toLowerCase();
-    const existingUser = mockUserDatabase[normalizedEmail];
-    
-    if (!existingUser) {
-      setIsLoading(false);
-      throw new Error('User not found');
-    }
-    
-    const mockUser = existingUser.userData;
-    setUser(mockUser);
-    setIsLoading(false);
-  }, [setUser]);
+  const updateUser = useCallback((_userData: Partial<User>) => {
+    void update();
+  }, [update]);
 
-  const register = useCallback(async (email: string, password: string, name: string, userType: 'customer' | 'tester' = 'customer') => {
-    setIsLoading(true);
-    
-    const normalizedEmail = email.toLowerCase();
-    
-    // Check if email already exists
-    const emailCheck = await checkEmailExists(normalizedEmail);
-    if (emailCheck.exists) {
-      setIsLoading(false);
-      throw new Error(`This email is already registered as a ${emailCheck.userType} account. Please use a different email or sign in to your existing account.`);
+  const checkEmailExists = useCallback(async (email: string) => {
+    const response = await fetch(`/api/register?email=${encodeURIComponent(email)}`, {
+      cache: 'no-store',
+    });
+
+    if (!response.ok) {
+      return { exists: false };
     }
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    const mockUser: User = {
-      id: Date.now().toString(),
-      email: normalizedEmail,
-      name,
-      userType,
-      ...(userType === 'customer' ? {
-        plan: 'free' as const,
-        company: name + "'s Company",
-        testsCreated: 0
-      } : {
-        rating: 0,
-        completedTests: 0,
-        earnings: 0,
-        level: 'New Tester'
-      })
+
+    const data = await response.json();
+    return {
+      exists: Boolean(data.exists),
+      userType: data.userType ? normalizeUserType(data.userType) : undefined,
     };
-    
-    // Add to mock database
-    mockUserDatabase[normalizedEmail] = {
-      userType,
-      userData: mockUser
-    };
-    
-    setUser(mockUser);
-    setIsLoading(false);
-  }, [checkEmailExists, setUser]);
-
-  const logout = useCallback(() => {
-    setUser(null);
-  }, [setUser]);
-
-  const updateUser = useCallback((userData: Partial<User>) => {
-    if (user) {
-      const updatedUser = { ...user, ...userData };
-      setUser(updatedUser);
-      
-      // Update mock database
-      if (mockUserDatabase[user.email]) {
-        mockUserDatabase[user.email].userData = updatedUser;
-      }
-    }
-  }, [user, setUser]);
+  }, []);
 
   return (
     <AuthContext.Provider value={{
@@ -152,7 +196,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       register,
       logout,
       updateUser,
-      checkEmailExists
+      checkEmailExists,
     }}>
       {children}
     </AuthContext.Provider>
@@ -160,7 +204,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 }
 
 /**
- * Hook to use authentication context
+ * Authentication provider component backed by NextAuth session state.
+ */
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  return (
+    <SessionProvider>
+      <AuthStateProvider>{children}</AuthStateProvider>
+    </SessionProvider>
+  );
+}
+
+/**
+ * Hook to use authentication context.
  */
 export function useAuth() {
   const context = useContext(AuthContext);

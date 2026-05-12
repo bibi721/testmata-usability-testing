@@ -13,12 +13,14 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Target, CheckCircle, DollarSign, Clock, Users, Star, AlertTriangle, Loader2, Check, X } from 'lucide-react';
+import { Target, CheckCircle, DollarSign, Clock, Users, Star, AlertTriangle, Loader2, Check, X, Eye, EyeOff } from 'lucide-react';
 
 interface FormData {
   firstName: string;
   lastName: string;
   email: string;
+  password: string;
+  confirmPassword: string;
   phone: string;
   city: string;
   age: string;
@@ -37,6 +39,8 @@ const TesterSignupPage = () => {
     firstName: '',
     lastName: '',
     email: '',
+    password: '',
+    confirmPassword: '',
     phone: '',
     city: '',
     age: '',
@@ -52,7 +56,9 @@ const TesterSignupPage = () => {
   const [error, setError] = useState('');
   const [currentStep, setCurrentStep] = useState(1);
   const [emailCheckStatus, setEmailCheckStatus] = useState<'idle' | 'checking' | 'available' | 'taken'>('idle');
-  const { register, checkEmailExists } = useAuth();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { register, checkEmailExists, isLoading } = useAuth();
   const router = useRouter();
 
   const benefits = [
@@ -82,8 +88,7 @@ const TesterSignupPage = () => {
     "Be 18 years or older",
     "Live in Ethiopia",
     "Have access to internet and devices",
-    "Speak Amharic and/or English",
-    "Complete a qualification test"
+    "Speak Amharic and/or English"
   ];
 
   const handleInputChange = (field: string, value: string) => {
@@ -127,11 +132,21 @@ const TesterSignupPage = () => {
     setError('');
 
     // Basic validation
-    const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'city'];
+    const requiredFields = ['firstName', 'lastName', 'email', 'password', 'confirmPassword', 'phone', 'city'];
     const missingFields = requiredFields.filter(field => !formData[field as keyof FormData]);
     
     if (missingFields.length > 0) {
       setError('Please fill in all required fields');
+      return;
+    }
+
+    if (formData.password.length < 8) {
+      setError('Password must be at least 8 characters');
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
       return;
     }
 
@@ -142,8 +157,20 @@ const TesterSignupPage = () => {
 
     try {
       const fullName = `${formData.firstName} ${formData.lastName}`;
-      await register(formData.email, 'defaultPassword123', fullName, 'tester');
-      router.push('/tester');
+      await register(formData.email, formData.password, fullName, 'tester', {
+        phone: formData.phone,
+        city: formData.city,
+        age: formData.age,
+        education: formData.education,
+        occupation: formData.occupation,
+        experience: formData.experience,
+        languages: formData.languages,
+        devices: formData.devices,
+        internetSpeed: formData.internetSpeed,
+        availability: formData.availability,
+        motivation: formData.motivation,
+      });
+      router.push('/tester/dashboard');
     } catch (err: any) {
       setError(err.message || 'Registration failed. Please try again.');
     }
@@ -216,9 +243,9 @@ const TesterSignupPage = () => {
                   <h4 className="font-medium text-blue-900 mb-2">What happens next?</h4>
                   <ol className="text-sm text-blue-800 space-y-1">
                     <li>1. Complete application</li>
-                    <li>2. Take qualification test</li>
-                    <li>3. Get approved</li>
-                    <li>4. Start earning!</li>
+                    <li>2. Sign in automatically</li>
+                    <li>3. Open your tester dashboard</li>
+                    <li>4. Start finding tests</li>
                   </ol>
                 </div>
               </CardContent>
@@ -327,6 +354,61 @@ const TesterSignupPage = () => {
                         {emailCheckStatus === 'taken' && (
                           <p className="text-xs text-red-600 mt-1">✗ Email is already registered</p>
                         )}
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="password">Password *</Label>
+                          <div className="relative">
+                            <Input
+                              id="password"
+                              type={showPassword ? 'text' : 'password'}
+                              value={formData.password}
+                              onChange={(e) => handleInputChange('password', e.target.value)}
+                              className="mt-1 pr-10"
+                              required
+                            />
+                            <button
+                              type="button"
+                              className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                              onClick={() => setShowPassword(!showPassword)}
+                            >
+                              {showPassword ? (
+                                <EyeOff className="h-4 w-4 text-slate-400 hover:text-slate-600" />
+                              ) : (
+                                <Eye className="h-4 w-4 text-slate-400 hover:text-slate-600" />
+                              )}
+                            </button>
+                          </div>
+                          <p className="text-xs text-slate-500 mt-1">Minimum 8 characters</p>
+                        </div>
+                        <div>
+                          <Label htmlFor="confirmPassword">Confirm Password *</Label>
+                          <div className="relative">
+                            <Input
+                              id="confirmPassword"
+                              type={showConfirmPassword ? 'text' : 'password'}
+                              value={formData.confirmPassword}
+                              onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                              className="mt-1 pr-10"
+                              required
+                            />
+                            <button
+                              type="button"
+                              className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            >
+                              {showConfirmPassword ? (
+                                <EyeOff className="h-4 w-4 text-slate-400 hover:text-slate-600" />
+                              ) : (
+                                <Eye className="h-4 w-4 text-slate-400 hover:text-slate-600" />
+                              )}
+                            </button>
+                          </div>
+                          {formData.confirmPassword && formData.password !== formData.confirmPassword && (
+                            <p className="text-xs text-red-600 mt-1">Passwords do not match</p>
+                          )}
+                        </div>
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -509,9 +591,8 @@ const TesterSignupPage = () => {
                       <div className="bg-blue-50 p-4 rounded-lg">
                         <h4 className="font-medium text-blue-900 mb-2">Next Steps</h4>
                         <p className="text-sm text-blue-800">
-                          After submitting your application, you'll receive an email with a qualification test. 
-                          This test helps us understand your testing skills and ensures you're ready to provide 
-                          valuable feedback to our clients.
+                          After submitting your application, your tester account will be created immediately and
+                          you will be taken to your dashboard.
                         </p>
                       </div>
 
@@ -554,9 +635,16 @@ const TesterSignupPage = () => {
                       <Button 
                         type="submit" 
                         className="bg-blue-600 hover:bg-blue-700 text-white"
-                        disabled={emailCheckStatus === 'taken' || emailCheckStatus === 'checking'}
+                        disabled={isLoading || emailCheckStatus === 'taken' || emailCheckStatus === 'checking'}
                       >
-                        Submit Application
+                        {isLoading ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Creating account...
+                          </>
+                        ) : (
+                          'Submit Application'
+                        )}
                       </Button>
                     )}
                   </div>

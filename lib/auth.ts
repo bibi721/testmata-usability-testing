@@ -1,11 +1,9 @@
 import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { PrismaAdapter } from '@auth/prisma-adapter';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
       name: 'credentials',
@@ -51,12 +49,12 @@ export const authOptions: NextAuthOptions = {
             company: user.customerProfile.company,
           } : {}),
           ...(user.userType === 'TESTER' && user.testerProfile ? {
-            rating: user.testerProfile.rating,
+            rating: Number(user.testerProfile.rating),
             completedTests: user.testerProfile.completedTests,
-            earnings: user.testerProfile.totalEarnings,
+            earnings: Number(user.testerProfile.totalEarnings),
             level: user.testerProfile.level,
           } : {})
-        };
+        } as any;
       }
     })
   ],
@@ -66,19 +64,20 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
-        token.userType = user.userType;
-        token.status = user.status;
-        token.emailVerified = user.emailVerified;
+        const authUser = user as any;
+        token.id = authUser.id;
+        token.userType = authUser.userType;
+        token.status = authUser.status;
+        token.emailVerified = authUser.emailVerified;
         
-        if (user.userType === 'CUSTOMER') {
-          token.plan = user.plan;
-          token.company = user.company;
-        } else if (user.userType === 'TESTER') {
-          token.rating = user.rating;
-          token.completedTests = user.completedTests;
-          token.earnings = user.earnings;
-          token.level = user.level;
+        if (authUser.userType === 'CUSTOMER') {
+          token.plan = authUser.plan;
+          token.company = authUser.company;
+        } else if (authUser.userType === 'TESTER') {
+          token.rating = authUser.rating;
+          token.completedTests = authUser.completedTests;
+          token.earnings = authUser.earnings;
+          token.level = authUser.level;
         }
       }
       return token;
