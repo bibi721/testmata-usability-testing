@@ -213,7 +213,7 @@ npx prisma migrate dev --name init
 ### 4. Seed the Database (Optional)
 
 ```bash
-npm run db:seed
+npm run seed
 ```
 
 ### 5. View Database (Optional)
@@ -227,7 +227,7 @@ npx prisma studio
 Create a simple test script to verify your connection:
 
 ```javascript
-// backend/test-db.js
+// Run from a local script or REPL, not as a public API route.
 const { PrismaClient } = require('@prisma/client');
 
 async function testConnection() {
@@ -253,8 +253,7 @@ testConnection();
 
 Run the test:
 ```bash
-cd backend
-node test-db.js
+npx prisma studio
 ```
 
 ## Production Deployment Steps

@@ -98,18 +98,17 @@ async function main() {
   // Seed the database
   console.log('6. Seeding database with sample data...');
   try {
-    runCommand('node prisma/seed.js', 'Seeding database');
+    runCommand('npm run seed', 'Seeding database');
   } catch (error) {
-    console.log('⚠️ Database seeding failed. You can try again later with: node prisma/seed.js');
+    console.log('⚠️ Database seeding failed. You can try again later with: npm run seed');
   }
 
   console.log('\n🎉 Database setup completed successfully!');
   console.log('🚀 Your Masada Next.js app is ready for Ethiopian usability testing!');
   console.log('\n📋 Next steps:');
   console.log('1. Start the development server: npm run dev');
-  console.log('2. Visit http://localhost:3000/api/test-db to test database');
-  console.log('3. Open Prisma Studio: npx prisma studio');
-  console.log('4. Start building your Ethiopian usability testing platform!');
+  console.log('2. Open Prisma Studio: npx prisma studio');
+  console.log('3. Start building your Ethiopian usability testing platform!');
 }
 
 main().catch(error => {

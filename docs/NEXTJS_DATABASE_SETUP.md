@@ -359,39 +359,13 @@ npx prisma migrate deploy
 
 ## Testing Database Connection
 
-Create a test API route:
+Use Prisma Studio or a Prisma command instead of keeping a public database test
+endpoint in the app:
 
-```typescript
-// app/api/test-db/route.ts
-import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
-
-export async function GET() {
-  try {
-    await prisma.$connect();
-    const userCount = await prisma.user.count();
-    
-    return NextResponse.json({
-      status: 'success',
-      message: 'Database connection successful',
-      userCount,
-      timestamp: new Date().toISOString(),
-    });
-  } catch (error) {
-    return NextResponse.json({
-      status: 'error',
-      message: 'Database connection failed',
-      error: error.message,
-    }, { status: 500 });
-  } finally {
-    await prisma.$disconnect();
-  }
-}
+```bash
+npx prisma studio
+npx prisma db pull --print
 ```
-
-Test by visiting: `http://localhost:3000/api/test-db`
 
 ## Ethiopian-Specific Optimizations
 

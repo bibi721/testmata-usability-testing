@@ -1,6 +1,6 @@
 # Masada - Ethiopian Usability Testing Platform
 
-A comprehensive platform connecting Ethiopian businesses with local users for usability testing.
+Masada connects Ethiopian businesses with local users for usability testing.
 
 ## Features
 
@@ -12,7 +12,7 @@ A comprehensive platform connecting Ethiopian businesses with local users for us
 
 ## Tech Stack
 
-- Next.js 13 (App Router)
+- Next.js 14 (App Router)
 - TypeScript
 - PostgreSQL Database
 - Prisma ORM
@@ -36,7 +36,7 @@ A comprehensive platform connecting Ethiopian businesses with local users for us
 
 3. **Run database setup script**:
    ```bash
-   npm run db:setup
+   npm run setup-db
    ```
 
 ### Development
@@ -46,7 +46,7 @@ A comprehensive platform connecting Ethiopian businesses with local users for us
 npm install
 
 # Generate Prisma client
-npm run db:generate
+npm run generate
 
 # Start development server
 npm run dev
@@ -56,16 +56,16 @@ npm run dev
 
 ```bash
 # Generate Prisma client
-npm run db:generate
+npm run generate
 
 # Push schema to database
-npm run db:push
+npx prisma db push
 
 # Open Prisma Studio
-npm run db:studio
+npm run studio
 
 # Seed database with sample data
-npm run db:seed
+npm run seed
 ```
 
 ## Project Structure
