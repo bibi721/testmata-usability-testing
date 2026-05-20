@@ -4,6 +4,8 @@ import { z } from 'zod';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
+export const dynamic = 'force-dynamic';
+
 const taskSchema = z.object({
   id: z.string(),
   instruction: z.string().min(1, 'Task instruction is required'),
