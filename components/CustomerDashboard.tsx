@@ -1,183 +1,168 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { 
-  Plus, 
-  Play, 
-  Users, 
-  BarChart3, 
-  Target, 
-  Clock, 
-  TrendingUp,
-  FileText,
-  Settings,
-  Filter,
-  Search,
-  MoreHorizontal,
-  MessageSquare,
-  CheckCircle,
-  Calendar
-} from 'lucide-react';
+import { AlertTriangle, BarChart3, Calendar, CheckCircle, Clock, FileText, MoreHorizontal, Plus, Target, Users } from 'lucide-react';
+
+interface CustomerTest {
+  id: string;
+  title: string;
+  description: string;
+  status: string;
+  maxTesters: number;
+  currentTesters: number;
+  paymentPerTester: number;
+  estimatedDuration: number;
+  createdAt: string;
+}
 
 const CustomerDashboard = () => {
   const { user } = useAuth();
+  const router = useRouter();
+  const planName = user?.plan || 'free';
+  const [tests, setTests] = useState<CustomerTest[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  // Mock data for customer dashboard
-  const stats = [
-    {
-      title: "Total Tests",
-      value: "12",
-      change: "+3 this month",
-      trend: "up",
-      icon: Target,
-      color: "blue"
-    },
-    {
-      title: "Ethiopian Testers",
-      value: "45",
-      change: "Active this week",
-      trend: "up", 
-      icon: Users,
-      color: "green"
-    },
-    {
-      title: "Avg. Success Rate",
-      value: "78%",
-      change: "+12% improvement",
-      trend: "up",
-      icon: TrendingUp,
-      color: "purple"
-    },
-    {
-      title: "Response Time",
-      value: "18hrs",
-      change: "Average turnaround",
-      trend: "neutral",
-      icon: Clock,
-      color: "orange"
-    }
-  ];
+  const loadTests = useCallback(async () => {
+    setError('');
 
-  const recentTests = [
-    {
-      id: 1,
-      name: "E-commerce Mobile App",
-      status: "completed",
-      participants: 8,
-      completion: 100,
-      successRate: 75,
-      date: "2 hours ago",
-      insights: 5
-    },
-    {
-      id: 2,
-      name: "Banking Website Usability",
-      status: "in-progress",
-      participants: 5,
-      completion: 60,
-      successRate: 80,
-      date: "6 hours ago",
-      insights: 3
-    },
-    {
-      id: 3,
-      name: "Food Delivery App Flow",
-      status: "completed",
-      participants: 10,
-      completion: 100,
-      successRate: 85,
-      date: "1 day ago",
-      insights: 7
-    },
-    {
-      id: 4,
-      name: "Educational Platform Test",
-      status: "scheduled",
-      participants: 0,
-      completion: 0,
-      successRate: 0,
-      date: "Starts tomorrow",
-      insights: 0
+    try {
+      const response = await fetch('/api/tests', { cache: 'no-store' });
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to load tests');
+      }
+
+      setTests(data.tests || []);
+    } catch (loadError: any) {
+      setError(loadError.message || 'Failed to load tests');
+    } finally {
+      setIsLoading(false);
     }
-  ];
+  }, []);
+
+  useEffect(() => {
+    loadTests();
+  }, [loadTests]);
+
+  const metrics = useMemo(() => {
+    const totalSlots = tests.reduce((sum, test) => sum + test.maxTesters, 0);
+    const draftCount = tests.filter((test) => test.status === 'DRAFT').length;
+    const estimatedSpend = tests.reduce((sum, test) => sum + (test.maxTesters * test.paymentPerTester), 0);
+
+    return [
+      {
+        title: 'Total Tests',
+        value: tests.length.toString(),
+        change: draftCount > 0 ? `${draftCount} draft${draftCount === 1 ? '' : 's'}` : 'No drafts yet',
+        icon: Target,
+        color: 'blue',
+      },
+      {
+        title: 'Tester Slots',
+        value: totalSlots.toString(),
+        change: 'Planned capacity',
+        icon: Users,
+        color: 'green',
+      },
+      {
+        title: 'Draft Budget',
+        value: `${estimatedSpend} ETB`,
+        change: 'Before payment processing',
+        icon: BarChart3,
+        color: 'purple',
+      },
+      {
+        title: 'Avg. Duration',
+        value: tests.length > 0 ? `${Math.round(tests.reduce((sum, test) => sum + test.estimatedDuration, 0) / tests.length)}m` : '0m',
+        change: 'Estimated per test',
+        icon: Clock,
+        color: 'orange',
+      },
+    ];
+  }, [tests]);
+
+  const recentTests = tests.slice(0, 4);
 
   const quickActions = [
     {
-      title: "Create New Test",
-      description: "Start testing with Ethiopian users",
+      title: 'Create New Test',
+      description: 'Save a real draft test',
       icon: Plus,
-      action: "create",
-      color: "blue"
+      href: '/dashboard/tests/new',
+      color: 'blue',
     },
     {
-      title: "View Analytics", 
-      description: "Analyze your test results",
-      icon: BarChart3,
-      action: "analytics",
-      color: "green"
+      title: 'View Tests',
+      description: 'Manage saved drafts',
+      icon: Target,
+      href: '/dashboard/tests',
+      color: 'green',
     },
     {
-      title: "Ethiopian Panel",
-      description: "Browse available testers",
+      title: 'Ethiopian Panel',
+      description: 'Browse available testers',
       icon: Users,
-      action: "panel",
-      color: "purple"
+      href: '/dashboard/testers',
+      color: 'purple',
     },
     {
-      title: "Generate Report",
-      description: "Export test findings",
+      title: 'Analytics',
+      description: 'Review future results',
       icon: FileText,
-      action: "report",
-      color: "orange"
-    }
+      href: '/dashboard/analytics',
+      color: 'orange',
+    },
   ];
 
   return (
     <div className="min-h-screen bg-slate-50 pt-16">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold text-slate-900 mb-2">
               Welcome back, {user?.name}
             </h1>
             <p className="text-slate-600">
-              Here's how your Ethiopian user testing is performing.
+              Create and manage Ethiopian usability test drafts.
             </p>
           </div>
           <div className="flex items-center space-x-4 mt-4 sm:mt-0">
             <Badge className="bg-blue-100 text-blue-700">
-              {user?.plan?.charAt(0).toUpperCase()}{user?.plan?.slice(1)} Plan
+              {planName.charAt(0).toUpperCase()}{planName.slice(1)} Plan
             </Badge>
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+            <Button onClick={() => router.push('/dashboard/tests/new')} className="bg-blue-600 hover:bg-blue-700 text-white">
               <Plus className="h-4 w-4 mr-2" />
               New Test
             </Button>
           </div>
         </div>
 
-        {/* Stats Grid */}
+        {error && (
+          <Alert className="border-red-200 bg-red-50 mb-6">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertDescription className="text-red-700">{error}</AlertDescription>
+          </Alert>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {stats.map((stat, index) => (
-            <Card key={index} className="border-slate-200">
+          {metrics.map((stat) => (
+            <Card key={stat.title} className="border-slate-200">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-slate-600 mb-1">
-                      {stat.title}
-                    </p>
-                    <p className="text-2xl font-bold text-slate-900">
-                      {stat.value}
-                    </p>
-                    <p className="text-sm mt-1 text-slate-500">
-                      {stat.change}
-                    </p>
+                    <p className="text-sm font-medium text-slate-600 mb-1">{stat.title}</p>
+                    <p className="text-2xl font-bold text-slate-900">{isLoading ? '...' : stat.value}</p>
+                    <p className="text-sm mt-1 text-slate-500">{stat.change}</p>
                   </div>
                   <div className={`p-3 rounded-lg ${
                     stat.color === 'blue' ? 'bg-blue-100' :
@@ -198,113 +183,77 @@ const CustomerDashboard = () => {
           ))}
         </div>
 
-        {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column - Tests */}
           <div className="lg:col-span-2 space-y-8">
-            {/* Recent Tests */}
             <Card className="border-slate-200">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="text-xl font-semibold text-slate-900">
-                      Recent Tests
-                    </CardTitle>
-                    <CardDescription>
-                      Your Ethiopian user testing sessions
-                    </CardDescription>
+                    <CardTitle className="text-xl font-semibold text-slate-900">Recent Tests</CardTitle>
+                    <CardDescription>Your latest saved draft tests</CardDescription>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Button variant="outline" size="sm">
-                      <Filter className="h-4 w-4 mr-2" />
-                      Filter
-                    </Button>
-                  </div>
+                  <Button variant="outline" size="sm" onClick={() => router.push('/dashboard/tests')}>
+                    View All
+                  </Button>
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {recentTests.map((test) => (
-                    <div
-                      key={test.id}
-                      className="flex items-center justify-between p-4 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
-                    >
-                      <div className="flex items-center space-x-4">
-                        <div className={`p-2 rounded-lg ${
-                          test.status === 'completed' ? 'bg-green-100' :
-                          test.status === 'in-progress' ? 'bg-blue-100' :
-                          'bg-slate-100'
-                        }`}>
-                          {test.status === 'completed' ? (
-                            <CheckCircle className="h-5 w-5 text-green-600" />
-                          ) : test.status === 'in-progress' ? (
-                            <Play className="h-5 w-5 text-blue-600" />
-                          ) : (
-                            <Calendar className="h-5 w-5 text-slate-600" />
-                          )}
-                        </div>
-                        <div>
-                          <h3 className="font-medium text-slate-900">{test.name}</h3>
-                          <div className="flex items-center space-x-4 mt-1 text-sm text-slate-500">
-                            <span className="flex items-center">
-                              <Users className="h-3 w-3 mr-1" />
-                              {test.participants} Ethiopian testers
-                            </span>
-                            <span>{test.date}</span>
-                            {test.insights > 0 && (
-                              <span className="flex items-center">
-                                <MessageSquare className="h-3 w-3 mr-1" />
-                                {test.insights} insights
-                              </span>
+                {isLoading ? (
+                  <div className="py-12 text-center text-slate-600">Loading tests...</div>
+                ) : recentTests.length === 0 ? (
+                  <div className="text-center py-12">
+                    <Target className="h-12 w-12 text-slate-400 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold text-slate-900 mb-2">No tests yet</h3>
+                    <p className="text-slate-600 mb-6">Create your first draft to start turning this dashboard into a real product workflow.</p>
+                    <Button onClick={() => router.push('/dashboard/tests/new')} className="bg-blue-600 hover:bg-blue-700 text-white">
+                      <Plus className="h-4 w-4 mr-2" />
+                      Create Draft Test
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {recentTests.map((test) => (
+                      <div key={test.id} className="flex flex-col gap-4 p-4 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors sm:flex-row sm:items-center sm:justify-between">
+                        <div className="flex items-center space-x-4">
+                          <div className="p-2 rounded-lg bg-slate-100">
+                            {test.status === 'DRAFT' ? (
+                              <Calendar className="h-5 w-5 text-slate-600" />
+                            ) : (
+                              <CheckCircle className="h-5 w-5 text-green-600" />
                             )}
                           </div>
+                          <div>
+                            <h3 className="font-medium text-slate-900">{test.title}</h3>
+                            <div className="flex flex-wrap items-center gap-3 mt-1 text-sm text-slate-500">
+                              <span>{test.maxTesters} tester slots</span>
+                              <span>{test.estimatedDuration} min</span>
+                              <span>{test.paymentPerTester} ETB/tester</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <Badge className="bg-slate-100 text-slate-700">{test.status}</Badge>
+                          <Button variant="ghost" size="sm">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
                         </div>
                       </div>
-                      <div className="flex items-center space-x-4">
-                        {test.status === 'in-progress' && (
-                          <div className="flex items-center space-x-2">
-                            <Progress value={test.completion} className="w-16 h-2" />
-                            <span className="text-sm text-slate-500">{test.completion}%</span>
-                          </div>
-                        )}
-                        {test.status === 'completed' && (
-                          <Badge className="bg-green-100 text-green-700">
-                            {test.successRate}% success
-                          </Badge>
-                        )}
-                        <Button variant="ghost" size="sm">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-6 text-center">
-                  <Button variant="outline">
-                    View All Tests
-                  </Button>
-                </div>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>
 
-          {/* Right Column - Quick Actions and Account */}
           <div className="space-y-8">
-            {/* Quick Actions */}
             <Card className="border-slate-200">
               <CardHeader>
-                <CardTitle className="text-lg font-semibold text-slate-900">
-                  Quick Actions
-                </CardTitle>
+                <CardTitle className="text-lg font-semibold text-slate-900">Quick Actions</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {quickActions.map((action, index) => (
-                    <Button
-                      key={index}
-                      variant="ghost"
-                      className="w-full justify-start h-auto p-4 hover:bg-slate-50"
-                    >
+                  {quickActions.map((action) => (
+                    <Button key={action.title} variant="ghost" onClick={() => router.push(action.href)} className="w-full justify-start h-auto p-4 hover:bg-slate-50">
                       <div className={`p-2 rounded-lg mr-3 ${
                         action.color === 'blue' ? 'bg-blue-100' :
                         action.color === 'green' ? 'bg-green-100' :
@@ -328,12 +277,9 @@ const CustomerDashboard = () => {
               </CardContent>
             </Card>
 
-            {/* Account Overview */}
             <Card className="border-slate-200">
               <CardHeader>
-                <CardTitle className="text-lg font-semibold text-slate-900">
-                  Account Overview
-                </CardTitle>
+                <CardTitle className="text-lg font-semibold text-slate-900">Account Overview</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="flex items-center space-x-3">
@@ -350,30 +296,12 @@ const CustomerDashboard = () => {
                   </div>
                 </div>
 
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-slate-600">Plan Usage</span>
-                    <Badge className="bg-blue-100 text-blue-700">
-                      {user?.plan?.charAt(0).toUpperCase()}{user?.plan?.slice(1)}
-                    </Badge>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-slate-600">Draft usage</span>
+                    <span className="text-slate-900">{tests.length} / 25</span>
                   </div>
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-slate-600">Tests this month</span>
-                      <span className="text-slate-900">12 / 25</span>
-                    </div>
-                    <Progress value={48} className="h-2" />
-                  </div>
-                </div>
-
-                <div className="pt-4 border-t border-slate-200">
-                  <Button variant="outline" className="w-full mb-3">
-                    <Settings className="h-4 w-4 mr-2" />
-                    Account Settings
-                  </Button>
-                  <Button variant="outline" className="w-full">
-                    Upgrade Plan
-                  </Button>
+                  <Progress value={Math.min((tests.length / 25) * 100, 100)} className="h-2" />
                 </div>
               </CardContent>
             </Card>
